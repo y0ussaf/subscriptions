@@ -1,6 +1,6 @@
 ﻿namespace Subscriptions.Domain.Entities
 {
-    public class BackApp
+    public class BackendApp : App
     {
         public string Secret { get; set; }
 

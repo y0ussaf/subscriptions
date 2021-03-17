@@ -1,6 +1,6 @@
 ﻿namespace Subscriptions.Domain.Entities
 {
-    public class FrontApp : App
+    public class FrontendApp : App
     {
         
     }
