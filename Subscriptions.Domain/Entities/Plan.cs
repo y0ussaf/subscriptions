@@ -9,7 +9,7 @@ namespace Subscriptions.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
-        public int? TrialExpireAfter { get; set; }
+        public uint? TrialExpireAfter { get; set; }
         public TimeIn? TrialExpireAfterTimeIn { get; set; } 
         public bool? TrialRequireCreditCard { get; set; }
         public App App { get; set; }

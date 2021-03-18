@@ -7,5 +7,6 @@ namespace Subscriptions.Application.Common.Interfaces
     {
         public Task RegisterBackendApp(BackendApp app);
         public Task RegisterFrontendApp(FrontendApp app);
+        public Task<App> GetApp(string id);
     }
 }
