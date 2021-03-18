@@ -5,6 +5,7 @@ namespace Subscriptions.Application.Common.Interfaces
 {
     public interface IAppsRepository
     {
-        public Task RegisterApp(App app);
+        public Task RegisterBackendApp(BackendApp app);
+        public Task RegisterFrontendApp(FrontendApp app);
     }
 }

@@ -30,7 +30,7 @@ namespace Subscriptions.Application.Commands.RegisterBackendApp
             app.Id = Guid.NewGuid().ToString();
             var secret = _appSecretGenerator.GenerateKey();
             app.Secret = Encoding.UTF8.GetString(MD5.HashData(Encoding.UTF8.GetBytes(secret)));
-            await _appsRepository.RegisterApp(app);
+            await _appsRepository.RegisterBackendApp(app);
             return new RegisterBackendAppResponse
             {
                 Secret = secret,
