@@ -43,6 +43,7 @@ namespace Subscriptions.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Subscriptions.Api v1"));
             }
 
+            app.UseExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseRouting();
