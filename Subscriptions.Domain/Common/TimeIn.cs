@@ -3,6 +3,6 @@
     public enum TimeIn
     {
         Days,
-        Month
+        Months
     }
 }

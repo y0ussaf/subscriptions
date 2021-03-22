@@ -2,12 +2,24 @@
 
 namespace Subscriptions.Domain.Entities
 {
-    public class Subscription
+    public abstract class Subscription
     {
-        public Plan Plan { get; set; }
+        public string Id { get; set; }
+        public Offer Offer { get; set; }
         public string SubscriberId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public bool IsTrial { get; set; }
+        public SubscriptionType SubscriptionType { get; set; }
+        public bool Active { get; set; }
+
+        public virtual bool IsValid()
+        {
+            return Active;
+        }
+    }
+
+    public enum SubscriptionType 
+    {
+        Trial,
+        Paid,
+        Free
     }
 }
