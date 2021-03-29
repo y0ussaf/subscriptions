@@ -9,9 +9,6 @@ namespace Subscriptions.Application.Commands.CreatePlan
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public string AppId { get; set; }
-        public uint? TrialExpireAfter { get; set; }
-        public string TrialExpireAfterTimeIn { get; set; } 
-        public bool? TrialRequireCreditCard { get; set; }
     }
     
 }

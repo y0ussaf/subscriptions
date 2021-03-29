@@ -48,12 +48,7 @@ namespace Subscriptions.Application.Commands.CreatePlan
                         App = app
                     };
                     _mapper.Map(request, plan);
-                    if (request.TrialExpireAfter.HasValue)
-                    {
-                        Enum.TryParse(request.TrialExpireAfterTimeIn,out TimeIn result);
-                        plan.TrialExpireAfterTimeIn = result;
-                    }
-                    await _plansRepository.CreatePlan(plan);
+                    await _plansRepository.StorePlan(plan);
                     await unitOfWork.CommitWork();
                     return new CreatePlanCommandResponse()
                     {
