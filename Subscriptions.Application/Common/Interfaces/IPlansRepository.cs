@@ -5,7 +5,7 @@ namespace Subscriptions.Application.Common.Interfaces
 {
     public interface IPlansRepository
     {
-        Task CreatePlan(Plan plan);
+        Task StorePlan(Plan plan);
         Task<Plan> GetPlan(string id);
         Task SetDefaultPlan(string appId,string planId);
     }
