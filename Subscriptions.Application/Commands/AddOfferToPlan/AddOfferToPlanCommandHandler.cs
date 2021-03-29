@@ -47,7 +47,7 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
                         Plan = plan
                     };
                     _mapper.Map(request,offer);
-                    await _plansRepository.CreatePlan(plan);
+                    await _plansRepository.StorePlan(plan);
                     await unitOfWork.CommitWork();
                     return new AddOfferToPlanCommandResponse()
                     {
