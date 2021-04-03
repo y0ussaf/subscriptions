@@ -1,25 +1,30 @@
 ﻿using System;
+using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
     public abstract class Cycle
     {
-        protected Cycle(Subscription subscription)
+        protected Cycle(PaidSubscription subscription,DateTimeRange dateTimeRange)
         {
             Subscription = subscription;
-            Offer = subscription.CurrentOffer;
+            DateTimeRange = dateTimeRange;
         }
-        
-        public Subscription Subscription { get; set; }
-        public Offer Offer { get; set; }
+        public DateTimeRange DateTimeRange { get; set; }
+
+        public PaidSubscription Subscription { get; set; }
         public CycleType Type { get; set; }
-        public abstract bool IsValid();
+
+        public virtual bool IsValid()
+        {
+            return DateTimeRange.Contains(DateTime.Now);
+        }
+        public DateTime CreatedAt { get; set; }
     }
 
     public enum CycleType
     {
         Paid,
-        UnExpiredFree,
         ExpiredFree,
     }
 }

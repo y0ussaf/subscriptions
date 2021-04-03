@@ -3,13 +3,13 @@ using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class FreeExpiredCycle : ExpiredCycle
+    public class ExpiredFreeCycle : Cycle
     {
-        public ExpiredOffer Offer { get; set; }
 
-        public FreeExpiredCycle(Subscription subscription,DateTimeRange dateTimeRange) : base(subscription,dateTimeRange)
+        public ExpiredFreeCycle(PaidSubscription subscription,DateTimeRange dateTimeRange) : base(subscription,dateTimeRange)
         {
             Type = CycleType.ExpiredFree;
         }
+        
     }
 }

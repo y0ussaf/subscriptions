@@ -3,6 +3,13 @@ namespace Subscriptions.Domain.Entities
 {
     public class Offer
     {
+        public Offer(string id, Plan plan)
+        {
+            Id = id;
+            Plan = plan;
+            
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
       
@@ -14,7 +21,8 @@ namespace Subscriptions.Domain.Entities
     {
         Trial,
         Paid,
-        Free
+        Free,
+        PaidOfferWithSpecificDayOnWitchCyclesStart
     }
     
 }

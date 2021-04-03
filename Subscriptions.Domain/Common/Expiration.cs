@@ -5,7 +5,7 @@ namespace Subscriptions.Domain.Common
 {
     public class Expiration : ValueObject
     {
-        public Expiration(uint expireAfter, TimeIn expireAfterTimeIn)
+        public Expiration(int expireAfter, TimeIn expireAfterTimeIn)
         {
             ExpireAfter = expireAfter;
             ExpireAfterTimeIn = expireAfterTimeIn;
@@ -21,11 +21,11 @@ namespace Subscriptions.Domain.Common
             }
             else
             {
-                var end = start.Value.AddMonths((int) ExpireAfter);
+                var end = start.Value.AddMonths(ExpireAfter);
                 return new DateTimeRange(start.Value, end);
             }
         }
-        public uint ExpireAfter { get; private set; }
+        public int ExpireAfter { get; private set; }
         public TimeIn ExpireAfterTimeIn { get; private set; }
         
         protected override IEnumerable<object> GetEqualityComponents()
