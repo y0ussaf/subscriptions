@@ -1,4 +1,4 @@
-﻿namespace Subscriptions.Application.Commands.CreateSubscription
+﻿namespace Subscriptions.Application.Commands.CreateFreeSubscription
 {
     public class SubscriptionDto
     {
