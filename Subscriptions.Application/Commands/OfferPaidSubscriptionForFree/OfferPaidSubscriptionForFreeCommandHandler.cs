@@ -72,7 +72,7 @@ namespace Subscriptions.Application.Commands.OfferPaidSubscriptionForFree
                         var expiration = new Expiration(request.ExpireAfter, timeIn);
                         cycle = paidOffer.CreateFreeExpiredCycle(paidSubscription,expiration,now);
                     }
-
+                    paidSubscription.AddCycle(cycle);
                     await _subscriptionsRepository.StoreSubscription(paidSubscription);
                     await _subscriptionsRepository.AddCycle(cycle);
                     await unitOfWork.CommitWork();

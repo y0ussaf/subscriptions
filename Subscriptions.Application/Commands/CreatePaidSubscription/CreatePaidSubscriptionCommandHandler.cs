@@ -84,6 +84,7 @@ namespace Subscriptions.Application.Commands.CreatePaidSubscription
                         var invoice = new Invoice(invoiceId, InvoiceStatus.WaitingToBePaid, paidOffer.AutoCharging,stripePayment);
                         await _invoicesRepository.StoreInvoice(invoice);
                         cycle = paidOffer.CreatePaidCycle(subscription, invoice,now);
+                        subscription.AddCycle(cycle);
                     }
 
                     await _subscriptionsRepository.AddCycle(cycle);

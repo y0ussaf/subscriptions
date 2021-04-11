@@ -12,9 +12,9 @@ namespace Subscriptions.Domain.Entities
             Type = CycleType.Paid;
         }
             
-        public override bool IsValid()
+        public override bool IsValid(DateTime now)
         {
-            return base.IsValid() && Invoice.Status == InvoiceStatus.Paid;
+            return base.IsValid(now) && Invoice.Status == InvoiceStatus.Paid;
         }
         
     }

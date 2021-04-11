@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriptions.Application.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriptions.Persistence", "Subscriptions.Persistence\Subscriptions.Persistence.csproj", "{F15B8EE5-ED10-4D6B-8EB2-2BBE4C88A42C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriptions.Domain.Tests", "Subscriptions.Domain.Tests\Subscriptions.Domain.Tests.csproj", "{F5E0CAB5-B60E-485E-9A3D-0601604A63A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{F15B8EE5-ED10-4D6B-8EB2-2BBE4C88A42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F15B8EE5-ED10-4D6B-8EB2-2BBE4C88A42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F15B8EE5-ED10-4D6B-8EB2-2BBE4C88A42C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5E0CAB5-B60E-485E-9A3D-0601604A63A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E0CAB5-B60E-485E-9A3D-0601604A63A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E0CAB5-B60E-485E-9A3D-0601604A63A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E0CAB5-B60E-485E-9A3D-0601604A63A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

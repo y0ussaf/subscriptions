@@ -14,9 +14,9 @@ namespace Subscriptions.Domain.Entities
             SubscriptionType = SubscriptionType.Trial;
         }
 
-        public override bool IsValid()
+        public override bool IsValid(DateTime now)
         {
-            return DateTimeRange.Contains(DateTime.Now);
+            return DateTimeRange.Contains(now);
         }
     }
 }

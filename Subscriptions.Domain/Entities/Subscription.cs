@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Subscriptions.Domain.Entities
@@ -19,7 +20,7 @@ namespace Subscriptions.Domain.Entities
         public SubscriptionStatus Status { get; set; }
         public SubscriptionType Type { get; set; }
         public bool Blocked { get; set; }
-        public abstract bool IsValid();
+        public abstract bool IsValid(DateTime now);
         public bool IsActive()
         {
             return Status == SubscriptionStatus.Active;

@@ -1,4 +1,6 @@
-﻿namespace Subscriptions.Domain.Entities
+﻿using System;
+
+namespace Subscriptions.Domain.Entities
 {
     public class FreeSubscription : Subscription
     {
@@ -10,7 +12,7 @@
             SubscriptionType = SubscriptionType.Free;
         }
 
-        public override bool IsValid()
+        public override bool IsValid(DateTime now)
         {
             return true;
         }

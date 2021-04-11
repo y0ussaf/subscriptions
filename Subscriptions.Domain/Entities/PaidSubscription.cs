@@ -19,9 +19,9 @@ namespace Subscriptions.Domain.Entities
             AllPaidCyclesShouldBePaid = paidOffer.AllPaidCyclesShouldBePaid;
         }
 
-        public override bool IsValid()
+        public override bool IsValid(DateTime now)
         {
-            var anyCycleValidNow = Cycles.Any(c => c.IsValid());
+            var anyCycleValidNow = Cycles.Any(c => c.IsValid(now));
             if (AllPaidCyclesShouldBePaid)
             {
                 // all paid cycles should be paid 
@@ -37,13 +37,13 @@ namespace Subscriptions.Domain.Entities
                 var last = Cycles.Last();
                 if (last.DateTimeRange.End is null )
                 {
-                    throw new Exception("close it first");
+                    throw new Exception("close the current cycle first");
                     
                 }
 
                 if (last.DateTimeRange.End > cycle.DateTimeRange.Start)
                 {
-                    throw new Exception("");
+                    throw new Exception("next cycle should be ge the end of current cycle");
                 }
             }
             Cycles.Add(cycle);

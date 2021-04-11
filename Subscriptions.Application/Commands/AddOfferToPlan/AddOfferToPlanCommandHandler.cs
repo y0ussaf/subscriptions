@@ -41,11 +41,7 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
                         throw new NotFoundException("");
                     }
 
-                    var offer = new Offer
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Plan = plan
-                    };
+                    var offer = new Offer(Guid.NewGuid().ToString(), plan);
                     _mapper.Map(request,offer);
                     await _plansRepository.StorePlan(plan);
                     await unitOfWork.CommitWork();

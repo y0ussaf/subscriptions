@@ -15,9 +15,9 @@ namespace Subscriptions.Domain.Entities
         public PaidSubscription Subscription { get; set; }
         public CycleType Type { get; set; }
 
-        public virtual bool IsValid()
+        public virtual bool IsValid(DateTime now)
         {
-            return DateTimeRange.Contains(DateTime.Now);
+            return DateTimeRange.Contains(now);
         }
         public DateTime CreatedAt { get; set; }
     }
