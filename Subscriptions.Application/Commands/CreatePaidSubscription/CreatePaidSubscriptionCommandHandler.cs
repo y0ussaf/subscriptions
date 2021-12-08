@@ -61,11 +61,11 @@ namespace Subscriptions.Application.Commands.CreatePaidSubscription
                     var paidOffer = (PaidOffer) offer;
                     var subscriptionId = Guid.NewGuid().ToString();
                     var subscription = new PaidSubscription(subscriptionId, subscriber, paidOffer);
-                    Cycle cycle;
+                    TimeLine timeLine;
                     var now = DateTime.Now;
                     if (paidOffer.OfferFreeCycle)
                     {
-                        cycle = paidOffer.CreateOfferedFreeCycle(subscription, now);
+                        timeLine = paidOffer.CreateOfferedFreeCycle(subscription, now);
                     }
                     else
                     {

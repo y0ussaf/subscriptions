@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Subscriptions.Domain.Entities
 {
-    public abstract class Subscription
+    public  class Subscription
     {
         public Subscription(string id, Subscriber subscriber)
         {
@@ -13,25 +13,24 @@ namespace Subscriptions.Domain.Entities
             Status = SubscriptionStatus.Active;
             Blocked = false;
         }
-
+        public Offer Offer { get; set; }
+        public List<TimeLine> TimeLines { get; set; }
+        public bool AllPaidCyclesShouldBePaid { get; set; }
+        public bool CreatingNextPaidCycleAutomatically { get; set; }
         public string Id { get; set; }
         public Subscriber Subscriber { get; set; }
-        public SubscriptionType SubscriptionType { get; set; }
         public SubscriptionStatus Status { get; set; }
-        public SubscriptionType Type { get; set; }
         public bool Blocked { get; set; }
-        public abstract bool IsValid(DateTime now);
+
+        public bool IsValid(DateTime now)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsActive()
         {
             return Status == SubscriptionStatus.Active;
         }
-    }
-
-    public enum SubscriptionType 
-    {
-        Trial,
-        Paid,
-        Free
     }
 
     public enum SubscriptionStatus
