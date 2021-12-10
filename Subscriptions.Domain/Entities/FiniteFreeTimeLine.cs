@@ -1,4 +1,5 @@
 ﻿using System;
+using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
@@ -7,6 +8,10 @@ namespace Subscriptions.Domain.Entities
         public override bool IsValid(DateTime date)
         {
             return true;
+        }
+
+        public FiniteFreeTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
+        {
         }
     }
 }

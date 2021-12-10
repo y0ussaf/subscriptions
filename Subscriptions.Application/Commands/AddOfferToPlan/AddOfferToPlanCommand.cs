@@ -8,6 +8,6 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
         public string PlanId { get; set; }
         public uint? ExpireAfter { get; set; }
         public string ExpireAfterTimeIn { get; set; }
-        public decimal? Price { get; set; }
+        
     }
 }

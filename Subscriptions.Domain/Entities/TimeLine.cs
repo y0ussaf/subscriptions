@@ -5,7 +5,18 @@ namespace Subscriptions.Domain.Entities
 {
     public abstract class TimeLine
     {
+        protected TimeLine(DateTimeRange dateTimeRange)
+        {
+            DateTimeRange = dateTimeRange;
+        }
+
         public abstract bool IsValid(DateTime date);
         public DateTimeRange DateTimeRange { get; set; }
+    }
+
+    public enum TimelineType
+    {
+        InfinitePaidTimeLine,
+        
     }
 }

@@ -6,10 +6,11 @@ namespace Subscriptions.Domain.Entities
 {
     public  class Subscription
     {
-        public Subscription(string id, Subscriber subscriber)
+        public Subscription(string id, Subscriber subscriber,Offer offer)
         {
             Id = id;
             Subscriber = subscriber;
+            Offer = offer;
             Status = SubscriptionStatus.Active;
             Blocked = false;
         }
@@ -21,7 +22,6 @@ namespace Subscriptions.Domain.Entities
         public Subscriber Subscriber { get; set; }
         public SubscriptionStatus Status { get; set; }
         public bool Blocked { get; set; }
-
         public bool IsValid(DateTime now)
         {
             throw new NotImplementedException();

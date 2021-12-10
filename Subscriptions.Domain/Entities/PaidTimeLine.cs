@@ -1,15 +1,15 @@
 ﻿using System;
+using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class PaidTimeLine : TimeLine
+    public abstract class PaidTimeLine : TimeLine
     {
-        public override bool IsValid(DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
         public Invoice Invoice { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
+        public bool AutoCharging { get; set; }
+        public PaidTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
+        {
+        }
     }
 }
