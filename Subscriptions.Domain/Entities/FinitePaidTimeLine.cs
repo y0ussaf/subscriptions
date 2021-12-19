@@ -5,13 +5,11 @@ namespace Subscriptions.Domain.Entities
 {
     public class FinitePaidTimeLine : PaidTimeLine
     {
-        public FinitePaidTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
-        {
-        }
 
-        public override bool IsValid(DateTime date)
+        public FinitePaidTimeLine(DateTimeRange dateTimeRange,Invoice invoice) : base(dateTimeRange,invoice)
         {
-            throw new NotImplementedException();
-        }
+         }
+
+     
     }
 }

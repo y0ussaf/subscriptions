@@ -10,12 +10,12 @@ namespace Subscriptions.Domain.Entities
         {
             Id = id;
             Plan = plan;
-            TimeLineDescriptions = new List<TimeLineDefinition>();
+            TimeLineDefinitions = new List<TimeLineDefinition>();
         }
         public string Id { get; set; }
         public string Name { get; set; }
         public Plan Plan { get; set; }
-        public ICollection<TimeLineDefinition> TimeLineDescriptions { get; set; }
+        public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
     }
    
     

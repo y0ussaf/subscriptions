@@ -1,19 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class FiniteFreeTimeLineDefinition : TimeLineDefinition
+    public class FiniteFreeTimeLineDefinition : TimeLineDefinition,IFiniteTimeLineDefinition
     {
-        public Expiration Expiration { get; set; }
+        public TimelineExpiration Expiration { get; set; }
         public FiniteFreeTimeLineDefinition()
         {
-            Type = TimelineDefinitionType.FiniteFreeTimeLineDefinition;
+            TimeLineDefinitionType = TimelineDefinitionType.FiniteFreeTimeLineDefinition;
         }
-        public override FiniteFreeTimeLine Build(DateTime now)
+        public override IEnumerable<TimeLine> Build(DateTime now)
         {
             var dateTimeRange = Expiration.CreateDateTimeRangeFromExpiration(now);
-            return new FiniteFreeTimeLine(dateTimeRange);
+            return new List<TimeLine>()
+            {
+                new FiniteFreeTimeLine(dateTimeRange)
+            };
         }
 
         

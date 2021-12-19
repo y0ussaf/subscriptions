@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,29 +62,21 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                         throw new NotFoundException("");
                     }
                     
+                    var now = DateTime.Now;
                     var subscriptionId = Guid.NewGuid().ToString();
                     var subscription = new Subscription(subscriptionId, subscriber,offer);
-                    var now = DateTime.Now;
-                    var firstTimelineDescription = offer.TimeLineDescriptions.First();
-                    var timeLine = firstTimelineDescription.Build(now);
-                    if (timeLine is PaidTimeLine paidTimeLine)
+                    var timelines = new List<TimeLine>();
+                    var nextTimelineStart = now;
+                    foreach (var timeLineDefinition in offer.TimeLineDefinitions)
                     {
-                        var paymentId = Guid.NewGuid().ToString();
-                        var paymentIntent = await _paymentIntentService.CreateAsync(
-                            new PaymentIntentCreateOptions
-                            {
-                                Amount = (long?) paidTimeLine.Price,
-                                Currency = "usd",
-                                Confirm = true,
-                                PaymentMethod = subscriber.DefaultPaymentMethod.Id
-                            },null, cancellationToken);
-                            
-                        var stripePayment = new StripePayment(paymentId,paymentIntent.Id);
-                        var invoiceId = Guid.NewGuid().ToString();
-                        var invoice = new Invoice(invoiceId, InvoiceStatus.WaitingToBePaid, paidTimeLine.AutoCharging,stripePayment);
-                        await _invoicesRepository.StoreInvoice(invoice);
+                        timelines.AddRange(timeLineDefinition.Build(nextTimelineStart));
+                        var lastTimeline = timelines.Last();
+                        if (lastTimeline.DateTimeRange.End is not null)
+                        {
+                            nextTimelineStart = lastTimeline.DateTimeRange.End.Value;
+                        }
                     }
-                    await _subscriptionsRepository.AddTimeline(subscriptionId,timeLine);
+                    subscription.AddTimeLines(timelines);
                     await unitOfWork.CommitWork();
                     var subscriptionDto = new SubscriptionDto();
                     _mapper.Map(subscription, subscriptionDto);

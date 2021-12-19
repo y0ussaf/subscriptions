@@ -12,19 +12,29 @@ namespace Subscriptions.Domain.Entities
             Subscriber = subscriber;
             Offer = offer;
             Status = SubscriptionStatus.Active;
-            Blocked = false;
         }
         public Offer Offer { get; set; }
-        public List<TimeLine> TimeLines { get; set; }
-        public bool AllPaidCyclesShouldBePaid { get; set; }
-        public bool CreatingNextPaidCycleAutomatically { get; set; }
+        private List<TimeLine> TimeLines { get; set; }
         public string Id { get; set; }
         public Subscriber Subscriber { get; set; }
         public SubscriptionStatus Status { get; set; }
-        public bool Blocked { get; set; }
-        public bool IsValid(DateTime now)
+
+        public void AddTimeLines(IEnumerable<TimeLine> timeLines)
         {
-            throw new NotImplementedException();
+            TimeLines.AddRange(timeLines);
+        }
+        public TimeLine GetCurrentTimeLine(DateTime date)
+        {
+            return TimeLines.FirstOrDefault(t => t.DateTimeRange.Contains(date));
+        }
+        public bool IsValid(DateTime date)
+        {
+            var currentTimeLine = GetCurrentTimeLine(date);
+            if (currentTimeLine is null)
+            {
+                return false;
+            }
+            return currentTimeLine.IsValid(date);
         }
 
         public bool IsActive()

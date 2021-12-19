@@ -3,16 +3,17 @@ using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class InfinitePaidTimeLine : PaidTimeLine
+    public class InfinitePaidTimeLine : PaidTimeLine,IInfiniteTimeLine
     {
-        public InfinitePaidTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
+        public InfinitePaidTimeLine(DateTime start, Invoice invoice) : base(new DateTimeRange(start,null),invoice)
         {
             
         }
 
-        public override bool IsValid(DateTime date)
+
+        public void MakeItFinite(DateTime end)
         {
-            throw new NotImplementedException();
+            DateTimeRange = new DateTimeRange(DateTimeRange.Start, end);
         }
     }
 }

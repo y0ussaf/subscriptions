@@ -7,7 +7,7 @@ namespace Subscriptions.Domain.Entities
     {
         public override bool IsValid(DateTime date)
         {
-            return true;
+            return DateTimeRange.Contains(date);
         }
 
         public FiniteFreeTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Domain.Common
 {
-    public class Expiration : ValueObject
+    public class TimelineExpiration : ValueObject
     {
-        public Expiration(int expireAfter, TimeIn expireAfterTimeIn)
+        public int ExpireAfter { get; private set; }
+        public TimeIn ExpireAfterTimeIn { get; private set; }
+        public TimelineExpiration(int expireAfter, TimeIn expireAfterTimeIn)
         {
             ExpireAfter = expireAfter;
             ExpireAfterTimeIn = expireAfterTimeIn;
@@ -14,20 +17,25 @@ namespace Subscriptions.Domain.Common
         public DateTimeRange CreateDateTimeRangeFromExpiration(DateTime? start = null)
         {
             start ??= DateTime.Now;
+            DateTime end;
             if (ExpireAfterTimeIn == TimeIn.Days)
             { 
-                var end = start.Value.AddDays(ExpireAfter);
-                return new DateTimeRange(start.Value, end);
+                end = start.Value.AddDays(ExpireAfter);
+            }
+            else if (ExpireAfterTimeIn == TimeIn.Hours)
+            {
+                end = start.Value.AddHours(ExpireAfter);
             }
             else
             {
-                var end = start.Value.AddMonths(ExpireAfter);
-                return new DateTimeRange(start.Value, end);
+                end = start.Value.AddMonths(ExpireAfter);
             }
+            
+            return new DateTimeRange(start.Value, end);
+
         }
-        public int ExpireAfter { get; private set; }
-        public TimeIn ExpireAfterTimeIn { get; private set; }
-        
+
+   
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return ExpireAfter;

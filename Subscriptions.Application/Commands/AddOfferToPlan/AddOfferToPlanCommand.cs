@@ -1,13 +1,20 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
+using Subscriptions.Domain.Common;
+using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Application.Commands.AddOfferToPlan
 {
     public class AddOfferToPlanCommand : IRequest<AddOfferToPlanCommandResponse>
     {
+        public AddOfferToPlanCommand()
+        {
+            TimeLineDefinitions = new List<TimeLineDefinition>();
+        }
+
         public string Name { get; set; }
         public string PlanId { get; set; }
-        public uint? ExpireAfter { get; set; }
-        public string ExpireAfterTimeIn { get; set; }
-        
+        public TimelineExpiration Expiration { get; set; }
+        public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
     }
 }

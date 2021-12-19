@@ -5,13 +5,13 @@ namespace Subscriptions.Domain.Common
 {
     public class DateTimeRange : ValueObject
     {
-        public DateTimeRange(DateTime? start, DateTime? end)
+        public DateTimeRange(DateTime start, DateTime? end)
         {
             Start = start;
             End = end;
         }
 
-        public DateTime? Start { get; private set; }
+        public DateTime Start { get; private set; }
         public DateTime? End { get; private set; }
         protected override IEnumerable<object> GetEqualityComponents()
         {
@@ -25,7 +25,7 @@ namespace Subscriptions.Domain.Common
             {
                 return true;
             }
-            return dateTime <= End && dateTime >= Start;
+            return dateTime < End && dateTime >= Start;
         }
     }
 }

@@ -3,15 +3,20 @@ using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class InfiniteFreeTimeLine : FreeTimeLine
+    public class InfiniteFreeTimeLine : FreeTimeLine,IInfiniteTimeLine
     {
         public override bool IsValid(DateTime date)
         {
-            throw new NotImplementedException();
+            return DateTimeRange.Contains(date);
         }
 
-        public InfiniteFreeTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
+        public InfiniteFreeTimeLine(DateTime start) : base(new DateTimeRange(start,null))
         {
+        }
+
+        public void MakeItFinite(DateTime end)
+        {
+            DateTimeRange = new DateTimeRange(DateTimeRange.Start, end);
         }
     }
 }

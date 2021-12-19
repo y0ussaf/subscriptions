@@ -6,6 +6,7 @@ namespace Subscriptions.Domain.Entities
     {
         protected FreeTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
         {
+            
         }
     }
 }

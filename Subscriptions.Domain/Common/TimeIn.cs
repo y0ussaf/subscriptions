@@ -2,6 +2,7 @@
 {
     public enum TimeIn
     {
+        Hours,
         Days,
         Months
     }

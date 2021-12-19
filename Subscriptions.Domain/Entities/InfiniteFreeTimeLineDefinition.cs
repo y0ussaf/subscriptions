@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
@@ -7,11 +8,14 @@ namespace Subscriptions.Domain.Entities
     {
         public InfiniteFreeTimeLineDefinition()
         {
-            Type = TimelineDefinitionType.InfiniteFreeTimeLineDefinition;
+            TimeLineDefinitionType = TimelineDefinitionType.InfiniteFreeTimeLineDefinition;
         }
-        public override InfiniteFreeTimeLine Build(DateTime now)
+        public override IEnumerable<TimeLine> Build(DateTime now)
         {
-            return new InfiniteFreeTimeLine(new DateTimeRange(now,null));
+            return new List<TimeLine>()
+            {
+                new InfiniteFreeTimeLine(now)
+            };
         }
     }
 }

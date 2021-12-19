@@ -6,6 +6,7 @@ using Subscriptions.Application.Commands.EndExpiredFreeCycle;
 using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Domain.Common;
+using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Application.Commands.CutInfiniteTimeline
 {
@@ -34,12 +35,12 @@ namespace Subscriptions.Application.Commands.CutInfiniteTimeline
                         throw new NotFoundException("");
                     }
 
-                    if (timeLine.DateTimeRange.End is not null)
+                    if (timeLine is not IInfiniteTimeLine infiniteTimeLine)
                     {
                         throw new BadRequestException("");
                     }
                     var now = DateTime.Now;
-                    timeLine.DateTimeRange = new DateTimeRange(timeLine.DateTimeRange.Start, now);
+                    infiniteTimeLine.MakeItFinite(now);
                     await _subscriptionsRepository.SetCycleDateTimeRange(timeLine);
                     await unitOfWork.CommitWork();
                     return new CutInfiniteTimelineCommandResponse();

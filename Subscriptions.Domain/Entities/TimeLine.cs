@@ -13,10 +13,5 @@ namespace Subscriptions.Domain.Entities
         public abstract bool IsValid(DateTime date);
         public DateTimeRange DateTimeRange { get; set; }
     }
-
-    public enum TimelineType
-    {
-        InfinitePaidTimeLine,
-        
-    }
+    
 }

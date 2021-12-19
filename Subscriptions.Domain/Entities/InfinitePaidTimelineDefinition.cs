@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
@@ -7,12 +8,16 @@ namespace Subscriptions.Domain.Entities
     {
         public InfinitePaidTimelineDefinition()
         {
-            Type = TimelineDefinitionType.InfinitePaidTimelineDefinition;
+            TimeLineDefinitionType = TimelineDefinitionType.InfinitePaidTimelineDefinition;
         }
 
-        public override TimeLine Build(DateTime now)
+        public override IEnumerable<TimeLine> Build(DateTime now)
         {
-            return new InfinitePaidTimeLine(new DateTimeRange(now, null));
+            var invoice = new Invoice(Guid.NewGuid().ToString(), InvoiceStatus.WaitingToBePaid, AutoCharging);
+            return new List<TimeLine>()
+            {
+                new InfinitePaidTimeLine(now,invoice)
+            };
         }
     }
 }
