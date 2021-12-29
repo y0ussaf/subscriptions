@@ -25,18 +25,20 @@ namespace Subscriptions.Application.Commands.SetDefaultOfferForPlan
 
         public async Task<Unit> Handle(SetDefaultOfferForPlanCommand request, CancellationToken cancellationToken)
         {
+            if (!request.AppId.HasValue)
+            {
+                throw new InvalidOperationException();
+            }
             await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
             {
                 await unitOfWork.BeginWork();
                 try
                 {
-                    var plan = await _plansRepository.GetPlan(request.PlanId);
-                    if (plan is null)
+                    if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
                     {
                         throw new NotFoundException("");
                     }
-                    var offer = await _offersRepository.GetOffer(request.OfferId);
-                    await _offersRepository.SetDefaultOfferForPlan(plan.Id, offer.Id);
+                    await _plansRepository.SetDefaultOffer(request.AppId.Value,request.PlanName,request.OfferName);
                     await unitOfWork.CommitWork();
                     return Unit.Value;
                 }

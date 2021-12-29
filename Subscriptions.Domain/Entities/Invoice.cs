@@ -5,7 +5,7 @@
         public string Id { get; set; }
         public bool AutoCharging { get; set; }
         public InvoiceStatus Status { get; set; }
-
+        public decimal Amount { get; set; }
         public Invoice(string id , InvoiceStatus status, bool autoCharging)
         {
             

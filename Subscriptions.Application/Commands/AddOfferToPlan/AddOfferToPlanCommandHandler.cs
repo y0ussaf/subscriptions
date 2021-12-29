@@ -41,13 +41,12 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
                         throw new NotFoundException("");
                     }
 
-                    var offer = new Offer(Guid.NewGuid().ToString(), plan);
+                    var offer = new Offer(plan);
                     _mapper.Map(request,offer);
                     await _plansRepository.StorePlan(plan);
                     await unitOfWork.CommitWork();
                     return new AddOfferToPlanCommandResponse()
                     {
-                        Id = plan.Id
                     };
                 }
                 catch (Exception)

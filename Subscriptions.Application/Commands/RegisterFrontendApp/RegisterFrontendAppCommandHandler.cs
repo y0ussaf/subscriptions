@@ -23,11 +23,10 @@ namespace Subscriptions.Application.Commands.RegisterFrontendApp
         {
             var frontendApp = new FrontendApp();
             _mapper.Map(request, frontendApp);
-            frontendApp.Id = Guid.NewGuid().ToString();
-            await _appsRepository.RegisterFrontendApp(frontendApp);
+            var id = await _appsRepository.RegisterFrontendApp(frontendApp);
             return new RegisterFrontendAppResponse()
             {
-                Id = frontendApp.Id
+                Id = id
             };
         }
     }

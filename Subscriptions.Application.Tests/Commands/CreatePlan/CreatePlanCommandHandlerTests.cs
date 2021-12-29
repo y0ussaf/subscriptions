@@ -32,8 +32,8 @@ namespace Subscriptions.Application.Tests.Commands.CreatePlan
         [Fact]
         public async Task Command_Should_Raise_NotFoundException_If_App_Doesnt_Exist()
         {
-            string appId = Guid.NewGuid().ToString();
-            _appsRepository.Setup(x => x.GetApp(appId)).ReturnsAsync(()=> null);
+            long appId = 1;
+            _appsRepository.Setup(x => x.GetAppById(appId)).ReturnsAsync(()=> null);
             var commandHandler = new CreatePlanCommandHandler(_mapper.Object,_plansRepository.Object,_unitOfWorkContext.Object,_appsRepository.Object);
             var command = new CreatePlanCommand()
             {

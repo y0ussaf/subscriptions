@@ -25,16 +25,15 @@ namespace Subscriptions.Application.Commands.RegisterBackendApp
 
         public async Task<RegisterBackendAppResponse> Handle(RegisterBackendAppCommand request, CancellationToken cancellationToken)
         {
-            BackendApp app = new BackendApp();
+            var app = new BackendApp();
             _mapper.Map(request,app);
-            app.Id = Guid.NewGuid().ToString();
             var secret = _appSecretGenerator.GenerateKey();
             app.Secret = Encoding.UTF8.GetString(MD5.HashData(Encoding.UTF8.GetBytes(secret)));
-            await _appsRepository.RegisterBackendApp(app);
+            var id = await _appsRepository.RegisterBackendApp(app);
             return new RegisterBackendAppResponse
             {
                 Secret = secret,
-                Id = app.Id
+                Id = id
             };
         }
     }

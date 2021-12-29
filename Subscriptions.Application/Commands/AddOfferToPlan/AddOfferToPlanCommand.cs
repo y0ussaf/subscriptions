@@ -15,6 +15,6 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
         public string Name { get; set; }
         public string PlanId { get; set; }
         public TimelineExpiration Expiration { get; set; }
-        public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
+        public IEnumerable<TimeLineDefinition> TimeLineDefinitions { get; set; }
     }
 }

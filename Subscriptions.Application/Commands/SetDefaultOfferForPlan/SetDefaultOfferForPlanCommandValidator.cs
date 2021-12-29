@@ -6,10 +6,12 @@ namespace Subscriptions.Application.Commands.SetDefaultOfferForPlan
     {
         public SetDefaultOfferForPlanCommandValidator()
         {
-            RuleFor(x => x.OfferId)
+            RuleFor(x => x.AppId)
                 .NotNull();
-            RuleFor(x => x.PlanId)
-                .NotNull();
+            RuleFor(x => x.OfferName)
+                .NotEmpty();
+            RuleFor(x => x.PlanName)
+                .NotEmpty();
         }
     }
 }

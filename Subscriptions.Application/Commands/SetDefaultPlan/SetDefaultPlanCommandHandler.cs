@@ -25,23 +25,25 @@ namespace Subscriptions.Application.Commands.SetDefaultPlan
 
         public async Task<Unit> Handle(SetDefaultPlanCommand request, CancellationToken cancellationToken)
         {
+            if (!request.AppId.HasValue)
+            {
+                throw new InvalidOperationException();
+            }
             await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
             {
                 await unitOfWork.BeginWork();
                 try
                 {
-                    var app = await _appsRepository.GetApp(request.AppId);
-                    if (app is null)
+                    if (await _appsRepository.Exist(request.AppId.Value))
                     {
                         throw new NotFoundException("");
                     }
 
-                    var plan = await _plansRepository.GetPlan(request.PlanId);
-                    if (plan is null)
+                    if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
                     {
                         throw new NotFoundException("");
                     }
-                    await _plansRepository.SetDefaultPlan(request.AppId,request.PlanId);
+                    await _appsRepository.SetDefaultPlan(request.AppId.Value,request.PlanName);
                     await unitOfWork.CommitWork();
                     return Unit.Value;
                 }

@@ -31,28 +31,33 @@ namespace Subscriptions.Application.Commands.CreatePlan
 
         public async Task<CreatePlanCommandResponse> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
         {
+            if (!request.AppId.HasValue)
+            {
+                throw new InvalidOperationException();
+            }
+            
             await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
             {
                 await unitOfWork.BeginWork();
                 try
                 {
-                    var app = await _appsRepository.GetApp(request.AppId);
-                    if (app is null)
+                    if (await _appsRepository.Exist(request.AppId.Value))
                     {
                         throw new NotFoundException("");
                     }
 
                     var plan = new Plan
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        App = app
+                        App = new App
+                        {
+                            Id = request.AppId.Value
+                        }
                     };
                     _mapper.Map(request, plan);
                     await _plansRepository.StorePlan(plan);
                     await unitOfWork.CommitWork();
                     return new CreatePlanCommandResponse()
                     {
-                        Id = plan.Id
                     };
                 }
                 catch (Exception)

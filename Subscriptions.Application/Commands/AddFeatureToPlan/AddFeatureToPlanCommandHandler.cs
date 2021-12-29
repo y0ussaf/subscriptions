@@ -28,20 +28,12 @@ namespace Subscriptions.Application.Commands.AddFeatureToPlan
                 await unitOfWork.BeginWork();
                 try
                 {
-                    Feature feature = new Feature()
-                    {
-                        Id = Guid.NewGuid().ToString()
-                    };
+                    var feature = new Feature();
                     _mapper.Map(request, feature);
-                    feature.Plan = new Plan
-                    {
-                        Id = request.PlanId
-                    };
                     await _featuresRepository.AddFeatureToPlan(feature);
                     await unitOfWork.CommitWork();
                     return new AddFeatureToPlanResponse()
                     {
-                        Id = feature.Id
                     };
                 }
                 catch (Exception)

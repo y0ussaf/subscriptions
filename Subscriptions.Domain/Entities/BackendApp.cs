@@ -4,5 +4,9 @@
     {
         public string Secret { get; set; }
 
+        public BackendApp()
+        {
+            Type = AppType.Backend;
+        }
     }
 }

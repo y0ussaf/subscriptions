@@ -8,8 +8,8 @@ namespace Subscriptions.Application.Commands.SetDefaultPlan
         {
             RuleFor(x => x.AppId)
                 .NotNull();
-            RuleFor(x => x.PlanId)
-                .NotNull();
+            RuleFor(x => x.PlanName)
+                .NotEmpty();
         }
     }
 }

@@ -7,6 +7,8 @@ namespace Subscriptions.Application.Common.Interfaces
     {
         Task StorePlan(Plan plan);
         Task<Plan> GetPlan(string id);
-        Task SetDefaultPlan(string appId,string planId);
+        Task SetDefaultPlan(long appId,string planName);
+        Task<bool> Exist(long appId, string planName);
+        Task SetDefaultOffer(long appId, string planName, string offerName);
     }
 }

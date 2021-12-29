@@ -3,6 +3,6 @@
     public class RegisterBackendAppResponse
     {
         public string Secret { get; set; }
-        public string Id { get; set; }
+        public long Id { get; set; }
     }
 }

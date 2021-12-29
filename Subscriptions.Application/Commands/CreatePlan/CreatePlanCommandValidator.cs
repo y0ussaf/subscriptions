@@ -8,7 +8,11 @@ namespace Subscriptions.Application.Commands.CreatePlan
     {
         public CreatePlanCommandValidator()
         {
-            
+            RuleFor(x => x.AppId)
+                .NotNull();
+            RuleFor(x => x.Name)
+                .NotEmpty();
+
         }
     }
 }
