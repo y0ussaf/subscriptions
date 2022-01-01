@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Subscriptions.Application;
+using Subscriptions.Infrastructure;
+using Subscriptions.Persistence;
 
 namespace Subscriptions.Api
 {
@@ -31,6 +35,10 @@ namespace Subscriptions.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Subscriptions.Api", Version = "v1"});
             });
+            
+            services.AddPersistence(Configuration);
+            services.AddInfrastructure(Configuration);
+            services.AddApplication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +51,7 @@ namespace Subscriptions.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Subscriptions.Api v1"));
             }
 
-            app.UseExceptionHandler();
+            app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
 
             app.UseRouting();

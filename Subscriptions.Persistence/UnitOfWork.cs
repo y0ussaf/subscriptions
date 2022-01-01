@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Npgsql;
 using Subscriptions.Application.Common.Interfaces;
 
 namespace Subscriptions.Persistence
@@ -10,9 +11,9 @@ namespace Subscriptions.Persistence
     {
         public DbTransaction Transaction { get; private set; }
         public bool IsDisposed;
-        private readonly SqlConnection _connection;
+        private readonly NpgsqlConnection _connection;
 
-        public UnitOfWork(SqlConnection connection)
+        public UnitOfWork(NpgsqlConnection connection)
         {
             _connection = connection;
         }

@@ -45,26 +45,28 @@ namespace Subscriptions.Application.Commands.CreateSubscription
         }
         public async Task<CreateSubscriptionCommandResponse> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
         {
+            if (!request.AppId.HasValue)
+            {
+                throw new Exception();
+            }
             await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
             {
                 await unitOfWork.BeginWork();
                 try
                 {
-                    var offer = await _offersRepository.GetOffer(request.OfferId);
-                    var subscriber = await _subscribersRepository.GetSubscriber(request.SubscriberId);
+                    if (await _subscribersRepository.Exist(request.AppId.Value,request.SubscriberId))
+                    {
+                        throw new NotFoundException("");
+                    }
+                    var offer = await _offersRepository.GetOfferByNameIncludingTimelinesDefinitions(request.AppId.Value, request.PlanName, request.OfferName);
                     if (offer is null)
                     {
                         throw new NotFoundException("");
                     }
 
-                    if (subscriber is null)
-                    {
-                        throw new NotFoundException("");
-                    }
                     
                     var now = DateTime.Now;
-                    var subscriptionId = Guid.NewGuid().ToString();
-                    var subscription = new Subscription(subscriptionId, subscriber,offer);
+                    var subscription = new Subscription();
                     var timelines = new List<TimeLine>();
                     var nextTimelineStart = now;
                     foreach (var timeLineDefinition in offer.TimeLineDefinitions)

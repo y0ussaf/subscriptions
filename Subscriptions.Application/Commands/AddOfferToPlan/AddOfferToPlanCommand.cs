@@ -13,7 +13,8 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
         }
 
         public string Name { get; set; }
-        public string PlanId { get; set; }
+        public long? AppId { get; set; }
+        public string PlanName { get; set; }
         public TimelineExpiration Expiration { get; set; }
         public IEnumerable<TimeLineDefinition> TimeLineDefinitions { get; set; }
     }

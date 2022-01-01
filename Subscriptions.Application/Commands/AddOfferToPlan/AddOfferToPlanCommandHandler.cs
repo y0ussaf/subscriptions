@@ -30,30 +30,30 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
 
         public async Task<AddOfferToPlanCommandResponse> Handle(AddOfferToPlanCommand request, CancellationToken cancellationToken)
         {
-            await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
+            if (!request.AppId.HasValue)
             {
-                await unitOfWork.BeginWork();
-                try
-                {
-                    var plan = await _plansRepository.GetPlan(request.PlanId);
-                    if (plan is null)
-                    {
-                        throw new NotFoundException("");
-                    }
+                throw new Exception();
+            }
 
-                    var offer = new Offer(plan);
-                    _mapper.Map(request,offer);
-                    await _plansRepository.StorePlan(plan);
-                    await unitOfWork.CommitWork();
-                    return new AddOfferToPlanCommandResponse()
-                    {
-                    };
-                }
-                catch (Exception)
+            await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
+            await unitOfWork.BeginWork();
+            try
+            {
+                if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
                 {
-                    await unitOfWork.RollBack();
-                    throw;
+                    throw new NotFoundException("");
                 }
+
+                var offer = new Offer();
+                _mapper.Map(request,offer);
+                await _offersRepository.AddOfferToPlan(request.AppId.Value,request.PlanName,offer);
+                await unitOfWork.CommitWork();
+                return new AddOfferToPlanCommandResponse();
+            }
+            catch (Exception)
+            {
+                await unitOfWork.RollBack();
+                throw;
             }
         }
     }

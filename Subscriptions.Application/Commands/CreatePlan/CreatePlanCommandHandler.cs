@@ -46,19 +46,11 @@ namespace Subscriptions.Application.Commands.CreatePlan
                         throw new NotFoundException("");
                     }
 
-                    var plan = new Plan
-                    {
-                        App = new App
-                        {
-                            Id = request.AppId.Value
-                        }
-                    };
+                    var plan = new Plan();
                     _mapper.Map(request, plan);
-                    await _plansRepository.StorePlan(plan);
+                    await _plansRepository.StorePlan(request.AppId.Value,plan);
                     await unitOfWork.CommitWork();
-                    return new CreatePlanCommandResponse()
-                    {
-                    };
+                    return new CreatePlanCommandResponse();
                 }
                 catch (Exception)
                 {

@@ -15,26 +15,39 @@ namespace Subscriptions.Application.Commands.RegisterBackendApp
         private readonly IMapper _mapper;
         private readonly IAppsRepository _appsRepository;
         private readonly IAppSecretGenerator _appSecretGenerator;
+        private readonly IUnitOfWorkContext _unitOfWorkContext;
 
-        public RegisterBackendAppCommandHandler(IMapper mapper,IAppsRepository appsRepository,IAppSecretGenerator appSecretGenerator)
+        public RegisterBackendAppCommandHandler(IMapper mapper,IAppsRepository appsRepository,IAppSecretGenerator appSecretGenerator
+        ,IUnitOfWorkContext unitOfWorkContext)
         {
             _mapper = mapper;
             _appsRepository = appsRepository;
             _appSecretGenerator = appSecretGenerator;
+            _unitOfWorkContext = unitOfWorkContext;
         }
 
         public async Task<RegisterBackendAppResponse> Handle(RegisterBackendAppCommand request, CancellationToken cancellationToken)
         {
+            var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             var app = new BackendApp();
             _mapper.Map(request,app);
-            var secret = _appSecretGenerator.GenerateKey();
-            app.Secret = Encoding.UTF8.GetString(MD5.HashData(Encoding.UTF8.GetBytes(secret)));
-            var id = await _appsRepository.RegisterBackendApp(app);
-            return new RegisterBackendAppResponse
+            app.Secret = _appSecretGenerator.GenerateKey();
+            try
             {
-                Secret = secret,
-                Id = id
-            };
+                await unitOfWork.BeginWork();
+                var id = await _appsRepository.RegisterBackendApp(app);
+                return new RegisterBackendAppResponse
+                {
+                    Secret = app.Secret,
+                    Id = id
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
     }
 }

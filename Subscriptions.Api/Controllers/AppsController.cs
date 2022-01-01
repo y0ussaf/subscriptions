@@ -16,10 +16,12 @@ namespace Subscriptions.Api.Controllers
             _mediator = mediator;
         }
 
+         
         [HttpPost("Backend")]
-        public async Task<IActionResult> RegisterBackendApp(RegisterBackendAppCommand registerBackendAppCommand)
+        public async Task<ActionResult<RegisterBackendAppResponse>> RegisterBackendApp(RegisterBackendAppCommand registerBackendAppCommand)
         { 
             var response = await _mediator.Send(registerBackendAppCommand);
+            
             return Ok(response);
         }
         

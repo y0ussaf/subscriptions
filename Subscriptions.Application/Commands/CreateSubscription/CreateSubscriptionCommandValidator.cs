@@ -6,8 +6,12 @@ namespace Subscriptions.Application.Commands.CreateSubscription
     {
         public CreateSubscriptionCommandValidator()
         {
-            RuleFor(x => x.OfferId)
+            RuleFor(x => x.AppId)
                 .NotNull();
+            RuleFor(x => x.PlanName)
+                .NotNull();
+            RuleFor(x => x.OfferName)
+                .NotEmpty();
             RuleFor(x => x.SubscriberId)
                 .NotNull();
         }

@@ -18,7 +18,7 @@ namespace Subscriptions.Persistence.Repositories
         public async Task<long> RegisterBackendApp(BackendApp app)
         {
  
-            var sql = "insert into app (name,type,secret) values (@name,@type,@secret);";
+            var sql = "insert into app (name,type,secret) values (@name,@type,@secret) returning id;";
             var con = _unitOfWorkContext.GetSqlConnection();
             return await con.ExecuteScalarAsync<long>(sql,new
             {

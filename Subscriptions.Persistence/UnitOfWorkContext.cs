@@ -3,16 +3,17 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Npgsql;
 using Subscriptions.Application.Common.Interfaces;
 
 namespace Subscriptions.Persistence
 {
     public class UnitOfWorkContext : IUnitOfWorkContext
     {
-        private readonly SqlConnection _sqlConnection;
+        private readonly NpgsqlConnection _sqlConnection;
         private UnitOfWork _unitOfWork;
 
-        public UnitOfWorkContext(SqlConnection sqlConnection)
+        public UnitOfWorkContext(NpgsqlConnection sqlConnection)
         {
             _sqlConnection = sqlConnection;
         }
@@ -40,7 +41,7 @@ namespace Subscriptions.Persistence
             return _unitOfWork.Transaction;
         }
 
-        public SqlConnection GetSqlConnection()
+        public NpgsqlConnection GetSqlConnection()
         {
             if (_unitOfWork is null || _unitOfWork.IsDisposed || (_unitOfWork.Transaction is null) )
             {

@@ -5,7 +5,10 @@ namespace Subscriptions.Domain.Entities
 {
     public class Offer
     {
-        
+        public Offer()
+        {
+        }
+
         public Offer(Plan plan)
         {
             Plan = plan;

@@ -6,11 +6,9 @@ namespace Subscriptions.Domain.Entities
 {
     public  class Subscription
     {
-        public Subscription(string id, Subscriber subscriber,Offer offer)
+        public Subscription()
         {
-            Id = id;
-            Subscriber = subscriber;
-            Offer = offer;
+         
             Status = SubscriptionStatus.Active;
         }
         public Offer Offer { get; set; }

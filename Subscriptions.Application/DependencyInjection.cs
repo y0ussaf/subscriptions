@@ -10,6 +10,7 @@ namespace Subscriptions.Application
     {
         public static void AddApplication(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddAutoMapper(Assembly.GetExecutingAssembly());
             serviceCollection.AddMediatR(Assembly.GetExecutingAssembly());
             serviceCollection.AddSingleton<IAppSecretGenerator, AppSecretGenerator>();
         }
