@@ -35,28 +35,26 @@ namespace Subscriptions.Application.Commands.CreatePlan
             {
                 throw new InvalidOperationException();
             }
-            
-            await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
-            {
-                await unitOfWork.BeginWork();
-                try
-                {
-                    if (await _appsRepository.Exist(request.AppId.Value))
-                    {
-                        throw new NotFoundException("");
-                    }
 
-                    var plan = new Plan();
-                    _mapper.Map(request, plan);
-                    await _plansRepository.StorePlan(request.AppId.Value,plan);
-                    await unitOfWork.CommitWork();
-                    return new CreatePlanCommandResponse();
-                }
-                catch (Exception)
+            await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
+            await unitOfWork.BeginWork();
+            try
+            {
+                if (!await _appsRepository.Exist(request.AppId.Value))
                 {
-                    await unitOfWork.RollBack();
-                    throw;
+                    throw new NotFoundException("");
                 }
+
+                var plan = new Plan();
+                _mapper.Map(request, plan);
+                await _plansRepository.StorePlan(request.AppId.Value,plan);
+                await unitOfWork.CommitWork();
+                return new CreatePlanCommandResponse();
+            }
+            catch (Exception)
+            {
+                await unitOfWork.RollBack();
+                throw;
             }
         }
     }

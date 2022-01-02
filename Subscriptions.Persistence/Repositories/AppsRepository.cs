@@ -74,7 +74,7 @@ namespace Subscriptions.Persistence.Repositories
         {
             var sql = "select 1 from app where id = @id";
             var con = _unitOfWorkContext.GetSqlConnection();
-            var reader = await con.ExecuteReaderAsync(sql, new {id}, _unitOfWorkContext.GetTransaction());
+            await using var reader = await con.ExecuteReaderAsync(sql, new {id}, _unitOfWorkContext.GetTransaction());
             return reader.HasRows;
         }
 

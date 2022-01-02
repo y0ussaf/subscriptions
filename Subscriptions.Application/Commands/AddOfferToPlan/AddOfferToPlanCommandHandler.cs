@@ -44,6 +44,10 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
                     throw new NotFoundException("");
                 }
 
+                if (await _offersRepository.Exist(request.AppId.Value,request.PlanName,request.Name))
+                {
+                    throw new InvalidOperationException();
+                }
                 var offer = new Offer();
                 _mapper.Map(request,offer);
                 await _offersRepository.AddOfferToPlan(request.AppId.Value,request.PlanName,offer);

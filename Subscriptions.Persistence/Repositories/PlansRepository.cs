@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
+using Subscriptions.Application.Commands.UpdatePlan;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Domain.Entities;
 
@@ -39,14 +40,27 @@ namespace Subscriptions.Persistence.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> Exist(long appId, string planName)
+        public async Task<bool> Exist(long appId, string planName)
         {
-            throw new System.NotImplementedException();
+            var sql = "select 1 from plan where \"appId\" = @appId and name = @planName";
+            var con = _unitOfWorkContext.GetSqlConnection();
+            await using var reader = await con.ExecuteReaderAsync(sql, new {AppId = appId,PlanName = planName}, _unitOfWorkContext.GetTransaction());
+            return reader.HasRows;
+            
         }
 
-        public Task SetDefaultOffer(long appId, string planName, string offerName)
+        public async Task SetDefaultOffer(long appId, string planName, string offerName)
         {
-            throw new System.NotImplementedException();
+            var sql = "update plan set defaultOfferName = @offerName where \"appId\" = @appId and name = '@planName'";
+            var con = _unitOfWorkContext.GetSqlConnection();
+            await con.ExecuteAsync(sql, new {AppId = appId, PlaneName = planName,OfferName = offerName});
+        }
+
+        public async Task UpdatePlan(long appId, string planName, Plan plan)
+        {
+            var sql = "update plan set name = @newName, description = @description where \"appId\" = @appId and name = @planName";
+            var con = _unitOfWorkContext.GetSqlConnection();
+            await con.ExecuteAsync(sql,new {NewName = plan.Name,PlanName = planName,AppId = appId,plan.Description},_unitOfWorkContext.GetTransaction());
         }
     }
 }

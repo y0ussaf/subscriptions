@@ -9,5 +9,6 @@ namespace Subscriptions.Application.Common.Interfaces
         Task<Offer> GetOfferByName(long appId,string planName,string offerName);
         Task SetDefaultOfferForPlan(string planId, string offerId);
         Task<Offer> GetOfferByNameIncludingTimelinesDefinitions(long appId, string planName, string offerName);
+        Task<bool> Exist(long appId, string planName, string offerName);
     }
 }

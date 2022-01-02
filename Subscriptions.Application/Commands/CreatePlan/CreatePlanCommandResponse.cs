@@ -2,6 +2,5 @@
 {
     public class CreatePlanCommandResponse
     {
-        public string Id { get; set; }
     }
 }

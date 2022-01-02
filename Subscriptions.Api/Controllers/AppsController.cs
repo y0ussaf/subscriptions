@@ -16,7 +16,7 @@ namespace Subscriptions.Api.Controllers
             _mediator = mediator;
         }
 
-         
+  
         [HttpPost("Backend")]
         public async Task<ActionResult<RegisterBackendAppResponse>> RegisterBackendApp(RegisterBackendAppCommand registerBackendAppCommand)
         { 
@@ -24,6 +24,7 @@ namespace Subscriptions.Api.Controllers
             
             return Ok(response);
         }
+        
         
     }
 }

@@ -36,6 +36,7 @@ namespace Subscriptions.Application.Commands.RegisterBackendApp
             {
                 await unitOfWork.BeginWork();
                 var id = await _appsRepository.RegisterBackendApp(app);
+                await unitOfWork.CommitWork();
                 return new RegisterBackendAppResponse
                 {
                     Secret = app.Secret,
@@ -44,6 +45,7 @@ namespace Subscriptions.Application.Commands.RegisterBackendApp
             }
             catch (Exception e)
             {
+                await unitOfWork.RollBack();
                 Console.WriteLine(e);
                 throw;
             }
