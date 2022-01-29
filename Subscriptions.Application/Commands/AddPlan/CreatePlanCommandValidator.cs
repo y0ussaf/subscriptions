@@ -1,8 +1,6 @@
-﻿using System;
-using FluentValidation;
-using Subscriptions.Domain.Common;
+﻿using FluentValidation;
 
-namespace Subscriptions.Application.Commands.CreatePlan
+namespace Subscriptions.Application.Commands.AddPlan
 {
     public class CreatePlanCommandValidator : AbstractValidator<CreatePlanCommand>
     {

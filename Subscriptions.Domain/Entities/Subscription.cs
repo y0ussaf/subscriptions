@@ -11,9 +11,10 @@ namespace Subscriptions.Domain.Entities
          
             Status = SubscriptionStatus.Active;
         }
-        public Offer Offer { get; set; }
-        private List<TimeLine> TimeLines { get; set; }
         public string Id { get; set; }
+
+        public Offer Offer { get; set; }
+        public List<TimeLine> TimeLines { get; set; }
         public Subscriber Subscriber { get; set; }
         public SubscriptionStatus Status { get; set; }
 

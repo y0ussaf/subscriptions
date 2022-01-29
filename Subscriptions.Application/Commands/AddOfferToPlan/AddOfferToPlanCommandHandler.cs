@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Subscriptions.Application.Common.Exceptions;
+using Subscriptions.Application.Commands.AddOfferToPlan.Persistence;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Domain.Entities;
 
@@ -13,19 +13,15 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly IOffersRepository _offersRepository;
-        private readonly IPlansRepository _plansRepository;
+        private readonly IAddOfferToPlanCommandPersistence _addOfferToPlanCommandPersistence;
 
         public AddOfferToPlanCommandHandler(IMapper mapper
             , IUnitOfWorkContext unitOfWorkContext
-            ,IOffersRepository offersRepository
-            ,IPlansRepository plansRepository
-            )
+            ,IAddOfferToPlanCommandPersistence addOfferToPlanCommandPersistence)
         {
             _mapper = mapper;
             _unitOfWorkContext = unitOfWorkContext;
-            _offersRepository = offersRepository;
-            _plansRepository = plansRepository;
+            _addOfferToPlanCommandPersistence = addOfferToPlanCommandPersistence;
         }
 
         public async Task<AddOfferToPlanCommandResponse> Handle(AddOfferToPlanCommand request, CancellationToken cancellationToken)
@@ -39,18 +35,14 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
             await unitOfWork.BeginWork();
             try
             {
-                if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
-                {
-                    throw new NotFoundException("");
-                }
 
-                if (await _offersRepository.Exist(request.AppId.Value,request.PlanName,request.Name))
+                if (await _addOfferToPlanCommandPersistence.OfferExist(request.AppId.Value,request.PlanName,request.Name))
                 {
                     throw new InvalidOperationException();
                 }
                 var offer = new Offer();
                 _mapper.Map(request,offer);
-                await _offersRepository.AddOfferToPlan(request.AppId.Value,request.PlanName,offer);
+                await _addOfferToPlanCommandPersistence.AddOffer(request.AppId.Value,request.PlanName,offer);
                 await unitOfWork.CommitWork();
                 return new AddOfferToPlanCommandResponse();
             }

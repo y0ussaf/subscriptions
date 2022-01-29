@@ -45,53 +45,50 @@ namespace Subscriptions.Application.Commands.CreateSubscription
         }
         public async Task<CreateSubscriptionCommandResponse> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
         {
-            if (!request.AppId.HasValue)
+            await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
+            await unitOfWork.BeginWork();
+            try
             {
-                throw new Exception();
-            }
-            await using (var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork())
-            {
-                await unitOfWork.BeginWork();
-                try
+                if (await _subscribersRepository.Exist(request.AppId,request.SubscriberId))
                 {
-                    if (await _subscribersRepository.Exist(request.AppId.Value,request.SubscriberId))
-                    {
-                        throw new NotFoundException("");
-                    }
-                    var offer = await _offersRepository.GetOfferByNameIncludingTimelinesDefinitions(request.AppId.Value, request.PlanName, request.OfferName);
-                    if (offer is null)
-                    {
-                        throw new NotFoundException("");
-                    }
+                    throw new NotFoundException("");
+                }
+                var offer = await _offersRepository.GetOfferByNameIncludingTimelinesDefinitions(request.AppId, request.PlanName, request.OfferName);
+                if (offer is null)
+                {
+                    throw new NotFoundException("");
+                }
 
                     
-                    var now = DateTime.Now;
-                    var subscription = new Subscription();
-                    var timelines = new List<TimeLine>();
-                    var nextTimelineStart = now;
-                    foreach (var timeLineDefinition in offer.TimeLineDefinitions)
-                    {
-                        timelines.AddRange(timeLineDefinition.Build(nextTimelineStart));
-                        var lastTimeline = timelines.Last();
-                        if (lastTimeline.DateTimeRange.End is not null)
-                        {
-                            nextTimelineStart = lastTimeline.DateTimeRange.End.Value;
-                        }
-                    }
-                    subscription.AddTimeLines(timelines);
-                    await unitOfWork.CommitWork();
-                    var subscriptionDto = new SubscriptionDto();
-                    _mapper.Map(subscription, subscriptionDto);
-                    return new CreateSubscriptionCommandResponse()
-                    {
-                        Subscription = subscriptionDto
-                    };
-                }
-                catch (Exception)
+                var now = DateTime.Now;
+                var subscription = new Subscription()
                 {
-                    await unitOfWork.RollBack();
-                    throw;
+                    Id = Guid.NewGuid().ToString()
+                };
+                var timelines = new List<TimeLine>();
+                var nextTimelineStart = now;
+                foreach (var timeLineDefinition in offer.TimeLineDefinitions)
+                {
+                    timelines.AddRange(timeLineDefinition.Build(nextTimelineStart));
+                    var lastTimeline = timelines.Last();
+                    if (lastTimeline.DateTimeRange.End is not null)
+                    {
+                        nextTimelineStart = lastTimeline.DateTimeRange.End.Value;
+                    }
                 }
+                subscription.AddTimeLines(timelines);
+                await unitOfWork.CommitWork();
+                var subscriptionDto = new SubscriptionDto();
+                _mapper.Map(subscription, subscriptionDto);
+                return new CreateSubscriptionCommandResponse()
+                {
+                    Subscription = subscriptionDto
+                };
+            }
+            catch (Exception)
+            {
+                await unitOfWork.RollBack();
+                throw;
             }
         }
     }

@@ -6,30 +6,26 @@ namespace Subscriptions.Domain.Common
 {
     public class TimelineExpiration : ValueObject
     {
-        public int ExpireAfter { get; private set; }
-        public TimeIn ExpireAfterTimeIn { get; private set; }
-        public TimelineExpiration(int expireAfter, TimeIn expireAfterTimeIn)
+        public int Minutes { get; set; }
+        public int Hours { get; set; }
+        public int Days { get; set; }
+        public int Months { get; set; }
+        public int Years { get; set; }
+        public TimelineExpiration(int minutes, int hours, int days, int months, int years)
         {
-            ExpireAfter = expireAfter;
-            ExpireAfterTimeIn = expireAfterTimeIn;
+            Minutes = minutes;
+            Hours = hours;
+            Days = days;
+            Months = months;
+            Years = years;
         }
 
         public DateTimeRange CreateDateTimeRangeFromExpiration(DateTime? start = null)
         {
             start ??= DateTime.Now;
-            DateTime end;
-            if (ExpireAfterTimeIn == TimeIn.Days)
-            { 
-                end = start.Value.AddDays(ExpireAfter);
-            }
-            else if (ExpireAfterTimeIn == TimeIn.Hours)
-            {
-                end = start.Value.AddHours(ExpireAfter);
-            }
-            else
-            {
-                end = start.Value.AddMonths(ExpireAfter);
-            }
+            var end = start.Value.AddYears(Years).AddMonths(Months)
+                .AddDays(Days).AddHours(Hours)
+                .AddMinutes(Minutes);
             
             return new DateTimeRange(start.Value, end);
 
@@ -38,8 +34,11 @@ namespace Subscriptions.Domain.Common
    
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return ExpireAfter;
-            yield return ExpireAfterTimeIn;
+            yield return Minutes;
+            yield return Hours;
+            yield return Days;
+            yield return Months;
+            yield return Years;
         }
     }
 }

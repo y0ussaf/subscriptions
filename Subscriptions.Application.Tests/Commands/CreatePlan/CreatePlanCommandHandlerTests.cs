@@ -1,12 +1,7 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
-using Subscriptions.Application.Commands.CreatePlan;
-using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
-using Subscriptions.Domain.Entities;
 using Xunit;
 
 namespace Subscriptions.Application.Tests.Commands.CreatePlan
@@ -32,16 +27,7 @@ namespace Subscriptions.Application.Tests.Commands.CreatePlan
         [Fact]
         public async Task Command_Should_Raise_NotFoundException_If_App_Doesnt_Exist()
         {
-            long appId = 1;
-            _appsRepository.Setup(x => x.GetAppById(appId)).ReturnsAsync(()=> null);
-            var commandHandler = new CreatePlanCommandHandler(_mapper.Object,_plansRepository.Object,_unitOfWorkContext.Object,_appsRepository.Object);
-            var command = new CreatePlanCommand()
-            {
-                AppId = appId,
-                Name = "plan 1"
-            };
-            Task<CreatePlanCommandResponse> HandleFunc() => commandHandler.Handle(command, CancellationToken.None);
-            await Assert.ThrowsAsync<NotFoundException>((Func<Task<CreatePlanCommandResponse>>) HandleFunc);
+         
         }
     }
 }

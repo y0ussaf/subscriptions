@@ -3,30 +3,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Subscriptions.Application.Commands.AddPlan.Persistence;
 using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
-using Subscriptions.Domain.Common;
 using Subscriptions.Domain.Entities;
 
-namespace Subscriptions.Application.Commands.CreatePlan
+namespace Subscriptions.Application.Commands.AddPlan
 {
     public class CreatePlanCommandHandler : IRequestHandler<CreatePlanCommand,CreatePlanCommandResponse>
     {
         private readonly IMapper _mapper;
-        private readonly IPlansRepository _plansRepository;
+        private readonly IAddPlanCommandPersistence _persistence;
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly IAppsRepository _appsRepository;
 
-        public CreatePlanCommandHandler(IMapper mapper,
-            IPlansRepository plansRepository,
-            IUnitOfWorkContext unitOfWorkContext,
-            IAppsRepository appsRepository
+        public CreatePlanCommandHandler(IMapper mapper, 
+            IAddPlanCommandPersistence persistence,
+            IUnitOfWorkContext unitOfWorkContext
             )
         {
             _mapper = mapper;
-            _plansRepository = plansRepository;
+            _persistence = persistence;
             _unitOfWorkContext = unitOfWorkContext;
-            _appsRepository = appsRepository;
         }
 
         public async Task<CreatePlanCommandResponse> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
@@ -40,14 +37,14 @@ namespace Subscriptions.Application.Commands.CreatePlan
             await unitOfWork.BeginWork();
             try
             {
-                if (!await _appsRepository.Exist(request.AppId.Value))
+                if (!await _persistence.AppExist(request.AppId.Value))
                 {
                     throw new NotFoundException("");
                 }
 
                 var plan = new Plan();
                 _mapper.Map(request, plan);
-                await _plansRepository.StorePlan(request.AppId.Value,plan);
+                await _persistence.AddPlan(request.AppId.Value,plan);
                 await unitOfWork.CommitWork();
                 return new CreatePlanCommandResponse();
             }

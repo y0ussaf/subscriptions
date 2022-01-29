@@ -5,21 +5,23 @@ using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class ManyExpiredPaidTimeLineDefinition : PaidTimeLineDefinition,IFiniteTimeLineDefinition
+    public class OneOrManyFinitePaidTimeLineDefinition : PaidTimeLineDefinition,IFiniteTimeLineDefinition
     {
-        public ManyExpiredPaidTimeLineDefinition(int repeat,TimelineExpiration expiration)
+        public OneOrManyFinitePaidTimeLineDefinition(int repeat,TimelineExpiration expiration)
         {
             Repeat = repeat;
             Expiration = expiration;
-            TimeLineDefinitionType = TimelineDefinitionType.ManyFinitePaidTimeLineDefinition;
+            TimeLineDefinitionType = TimelineDefinitionType.OneOrManyFinitePaidTimeLineDefinition;
         }
 
         public int Repeat { get; set; }
+
         public TimelineExpiration Expiration { get; set; }
         public override IEnumerable<FinitePaidTimeLine> Build(DateTime now)
         {
-            var timelines = new List<FinitePaidTimeLine>();
             var nextTimelineStart = now;
+            
+            var timelines = new List<FinitePaidTimeLine>();
             for (var i = 0; i < Repeat; i++)
             {
                 var invoice = new Invoice(Guid.NewGuid().ToString(), InvoiceStatus.WaitingToBePaid,AutoCharging);

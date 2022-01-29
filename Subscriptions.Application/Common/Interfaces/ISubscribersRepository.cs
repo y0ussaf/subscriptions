@@ -8,6 +8,6 @@ namespace Subscriptions.Application.Common.Interfaces
         public Task StoreSubscriber(Subscriber subscriber);
         public Task<Subscriber> GetSubscriber(string id);
         public Task SetDefaultPaymentMethod(Subscriber subscriber);
-        public Task<bool> Exist(long appId, string subscriberId);
+        public Task<bool> Exist(string appId, string subscriberId);
     }
 }

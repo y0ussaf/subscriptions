@@ -7,6 +7,7 @@ namespace Subscriptions.Domain.Entities
     {
         public Offer()
         {
+            TimeLineDefinitions = new List<TimeLineDefinition>();
         }
 
         public Offer(Plan plan)
@@ -17,6 +18,11 @@ namespace Subscriptions.Domain.Entities
         public string Name { get; set; }
         public Plan Plan { get; set; }
         public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
+
+        public void AddTimelineDefinition(TimeLineDefinition definition)
+        {
+            TimeLineDefinitions.Add(definition);
+        }
     }
    
     

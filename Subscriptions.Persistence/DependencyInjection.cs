@@ -1,9 +1,15 @@
-﻿using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using Subscriptions.Application.Commands.AddFeatureToPlan.Persistence;
+using Subscriptions.Application.Commands.AddOfferToPlan.Persistence;
+using Subscriptions.Application.Commands.AddPlan.Persistence;
+using Subscriptions.Application.Commands.CreateSubscription.Persistence;
 using Subscriptions.Application.Common.Interfaces;
-using Subscriptions.Persistence.Repositories;
+using Subscriptions.Persistence.Commands.AddFeatureToPlan;
+using Subscriptions.Persistence.Commands.AddOffer;
+using Subscriptions.Persistence.Commands.AddPlan;
+using Subscriptions.Persistence.Commands.CreateSubscription;
 
 namespace Subscriptions.Persistence
 {
@@ -18,15 +24,10 @@ namespace Subscriptions.Persistence
             });
             serviceCollection.AddScoped<IUnitOfWorkContext,UnitOfWorkContext>();
 
-            serviceCollection.AddScoped<IAppsRepository, AppsRepository>();
-            serviceCollection.AddScoped<IFeaturesRepository, FeaturesRepository>();
-            serviceCollection.AddScoped<IInvoicesRepository, InvoicesRepository>();
-            serviceCollection.AddScoped<IPaymentsRepository, PaymentsRepository>();
-            serviceCollection.AddScoped<IPaymentMethodsRepository, PaymentMethodsRepository>();
-            serviceCollection.AddScoped<IPlansRepository, PlansRepository>();
-            serviceCollection.AddScoped<ISubscribersRepository, SubscribersRepository>();
-            serviceCollection.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
-            serviceCollection.AddScoped<IOffersRepository, OffersRepository>();
+            serviceCollection.AddScoped<IAddOfferToPlanCommandPersistence, AddOfferPersistence>();
+            serviceCollection.AddScoped<ICreateSubscriptionCommandPersistence, CreateSubscriptionPersistence>();
+            serviceCollection.AddScoped<IAddPlanCommandPersistence, AddPlanPersistence>();
+            serviceCollection.AddScoped<IAddFeatureToPlanCommandPersistence,AddFeatureToPlanPersistence>();
             return serviceCollection;
         }
     }

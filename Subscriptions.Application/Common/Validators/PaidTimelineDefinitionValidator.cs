@@ -7,7 +7,7 @@ namespace Subscriptions.Application.Common.Validators
     {
         public PaidTimelineDefinitionValidator()
         {
-            RuleFor(x => x.Price)
+            RuleFor(x => x.Amount)
                 .NotNull();
             
         }

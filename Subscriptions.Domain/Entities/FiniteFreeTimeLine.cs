@@ -12,6 +12,7 @@ namespace Subscriptions.Domain.Entities
 
         public FiniteFreeTimeLine(DateTimeRange dateTimeRange) : base(dateTimeRange)
         {
+            TimelineType = TimelineType.FiniteFreeTimeline;
         }
     }
 }

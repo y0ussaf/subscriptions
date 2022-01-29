@@ -7,7 +7,7 @@ namespace Subscriptions.Domain.Entities
     {
         public InfinitePaidTimeLine(DateTime start, Invoice invoice) : base(new DateTimeRange(start,null),invoice)
         {
-            
+            TimelineType = TimelineType.InfinitePaidTimeline;
         }
 
 

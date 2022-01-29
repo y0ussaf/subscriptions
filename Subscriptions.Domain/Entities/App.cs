@@ -9,7 +9,7 @@ namespace Subscriptions.Domain.Entities
             Plans = new List<Plan>();
         }
 
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public AppType Type { get; set; }
         public Plan DefaultPlan { get; set; }

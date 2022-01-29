@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Subscriptions.Domain.Entities;
 
-namespace Subscriptions.Application.Commands.CreatePlan.Mapping
+namespace Subscriptions.Application.Commands.AddPlan.Mapping
 {
     public class CreatePlanCommandProfile : Profile
     {

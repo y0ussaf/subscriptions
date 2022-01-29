@@ -7,8 +7,7 @@ namespace Subscriptions.Application.Common.Validators
     {
         public ExpirationValidator()
         {
-            RuleFor(x => x.ExpireAfter)
-                .GreaterThanOrEqualTo(1);
+             
         }
     }
 }

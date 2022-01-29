@@ -8,7 +8,8 @@ namespace Subscriptions.Domain.Entities
 
         public FinitePaidTimeLine(DateTimeRange dateTimeRange,Invoice invoice) : base(dateTimeRange,invoice)
         {
-         }
+            TimelineType = TimelineType.FinitePaidTimeline;
+        }
 
      
     }

@@ -12,6 +12,7 @@ namespace Subscriptions.Domain.Entities
 
         public InfiniteFreeTimeLine(DateTime start) : base(new DateTimeRange(start,null))
         {
+            TimelineType = TimelineType.InfiniteFreeTimeline;
         }
 
         public void MakeItFinite(DateTime end)
