@@ -1,1 +1,1 @@
-# subscription management software
+# subscriptions management software
