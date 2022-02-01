@@ -22,7 +22,7 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             _mapper = mapper;
         }
 
-        public async Task<Offer> GetOffer(long appId, string planName, string offerName)
+        public async Task<Offer> GetOffer(string planName, string offerName)
         {
             var sql = @"select o.name,o.description,t.*
                         from offer as o inner join timeline_definition as t on
@@ -31,7 +31,6 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             var con = _unitOfWorkContext.GetSqlConnection();
             var rows = (await con.QueryAsync<GetOfferContract>(sql, new
             {
-                appId,
                 planName,
                 offerName
             })).ToList();
@@ -68,15 +67,14 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             return null;
         }
 
-        public async Task AddSubscription(string appId, string planName, string offerName, Subscription subscription)
+        public async Task AddSubscription(string planName, string offerName, Subscription subscription)
         {
             var con = _unitOfWorkContext.GetSqlConnection();
-            var insertSubSql = @"insert into subscription (id,subscriber_id, app_id, plan_name, offer_name) 
-                                values (@id,@subscriberId,@appId,@planName,@offerName)";
+            var insertSubSql = @"insert into subscription (id,subscriber_id, plan_name, offer_name) 
+                                values (@id,@subscriberId,@planName,@offerName)";
             await con.ExecuteAsync(insertSubSql, new
             {
                 subscription.Id,
-                appId,
                 planName,
                 offerName,
                 subscriberId = subscription.Subscriber.Id
@@ -115,6 +113,11 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             }
 
             await batch.ExecuteNonQueryAsync();
+        }
+
+        public Task<bool> SubscriberExist(string subscriberId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

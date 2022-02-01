@@ -5,12 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Stripe;
+using Subscriptions.Application.Commands.CreateSubscription.Persistence;
 using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
-using Subscriptions.Application.Common.Services.Stripe.Interfaces;
 using Subscriptions.Domain.Entities;
-using Invoice = Subscriptions.Domain.Entities.Invoice;
 using Subscription = Subscriptions.Domain.Entities.Subscription;
 
 namespace Subscriptions.Application.Commands.CreateSubscription
@@ -18,30 +16,18 @@ namespace Subscriptions.Application.Commands.CreateSubscription
     public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand,CreateSubscriptionCommandResponse>
     {
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly ISubscriptionsRepository _subscriptionsRepository;
-        private readonly IOffersRepository _offersRepository;
-        private readonly IInvoicesRepository _invoicesRepository;
-        private readonly ISubscribersRepository _subscribersRepository;
         private readonly IMapper _mapper;
-        private readonly IPaymentIntentService _paymentIntentService;
+        private readonly ICreateSubscriptionCommandPersistence _persistence;
 
         public CreateSubscriptionCommandHandler(
             IUnitOfWorkContext unitOfWorkContext,
-            ISubscriptionsRepository subscriptionsRepository,
-            IOffersRepository offersRepository,
-            IInvoicesRepository invoicesRepository,
-            ISubscribersRepository subscribersRepository,
             IMapper mapper,
-            IPaymentIntentService paymentIntentService
+            ICreateSubscriptionCommandPersistence persistence
         )
         {
             _unitOfWorkContext = unitOfWorkContext;
-            _subscriptionsRepository = subscriptionsRepository;
-            _offersRepository = offersRepository;
-            _invoicesRepository = invoicesRepository;
-            _subscribersRepository = subscribersRepository;
             _mapper = mapper;
-            _paymentIntentService = paymentIntentService;
+            _persistence = persistence;
         }
         public async Task<CreateSubscriptionCommandResponse> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
         {
@@ -49,11 +35,11 @@ namespace Subscriptions.Application.Commands.CreateSubscription
             await unitOfWork.BeginWork();
             try
             {
-                if (await _subscribersRepository.Exist(request.AppId,request.SubscriberId))
+                if (await _persistence.SubscriberExist(request.SubscriberId))
                 {
                     throw new NotFoundException("");
                 }
-                var offer = await _offersRepository.GetOfferByNameIncludingTimelinesDefinitions(request.AppId, request.PlanName, request.OfferName);
+                var offer = await _persistence.GetOffer(request.PlanName, request.OfferName);
                 if (offer is null)
                 {
                     throw new NotFoundException("");
@@ -77,6 +63,7 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                     }
                 }
                 subscription.AddTimeLines(timelines);
+                await _persistence.AddSubscription(request.PlanName,request.OfferName,subscription);
                 await unitOfWork.CommitWork();
                 var subscriptionDto = new SubscriptionDto();
                 _mapper.Map(subscription, subscriptionDto);

@@ -6,8 +6,7 @@ namespace Subscriptions.Application.Commands.AddPlan
     {
         public CreatePlanCommandValidator()
         {
-            RuleFor(x => x.AppId)
-                .NotNull();
+
             RuleFor(x => x.Name)
                 .NotEmpty();
 

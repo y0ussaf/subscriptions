@@ -9,4 +9,5 @@
     &lt;TestId&gt;xUnit::F5E0CAB5-B60E-485E-9A3D-0601604A63A7::net5.0::Subscriptions.Domain.Tests.Entities.TimelinesTests.InfiniteFreeTimeLine_Is_Valid_Until_You_Make_It_Finite&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F5E0CAB5-B60E-485E-9A3D-0601604A63A7::net5.0::Subscriptions.Domain.Tests.Entities.TimelinesTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+&lt;/SessionState&gt;</s:String>
+	</wpf:ResourceDictionary>

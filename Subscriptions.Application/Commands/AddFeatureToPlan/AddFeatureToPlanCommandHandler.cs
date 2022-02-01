@@ -25,22 +25,18 @@ namespace Subscriptions.Application.Commands.AddFeatureToPlan
 
         public async Task<AddFeatureToPlanResponse> Handle(AddFeatureToPlanCommand request, CancellationToken cancellationToken)
         {
-            if (!request.AppId.HasValue)
-            {
-                throw new InvalidOperationException();
-            }
 
             await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
             try
             {
-                if (await _persistence.PlanExist(request.AppId.Value,request.PlanName))
+                if (await _persistence.PlanExist(request.PlanName))
                 {
                     throw new NotFoundException(string.Empty);
                 }
                 var feature = new Feature();
                 _mapper.Map(request, feature);
-                await _persistence.AddFeatureToPlan(request.AppId.Value, request.PlanName, feature);
+                await _persistence.AddFeatureToPlan(request.PlanName, feature);
                 await unitOfWork.CommitWork();
                 return new AddFeatureToPlanResponse()
                 {

@@ -4,11 +4,13 @@ using Npgsql;
 using Subscriptions.Application.Commands.AddFeatureToPlan.Persistence;
 using Subscriptions.Application.Commands.AddOfferToPlan.Persistence;
 using Subscriptions.Application.Commands.AddPlan.Persistence;
+using Subscriptions.Application.Commands.AddSubscriber.Persistence;
 using Subscriptions.Application.Commands.CreateSubscription.Persistence;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Persistence.Commands.AddFeatureToPlan;
 using Subscriptions.Persistence.Commands.AddOffer;
 using Subscriptions.Persistence.Commands.AddPlan;
+using Subscriptions.Persistence.Commands.AddSubscriber;
 using Subscriptions.Persistence.Commands.CreateSubscription;
 
 namespace Subscriptions.Persistence
@@ -28,6 +30,7 @@ namespace Subscriptions.Persistence
             serviceCollection.AddScoped<ICreateSubscriptionCommandPersistence, CreateSubscriptionPersistence>();
             serviceCollection.AddScoped<IAddPlanCommandPersistence, AddPlanPersistence>();
             serviceCollection.AddScoped<IAddFeatureToPlanCommandPersistence,AddFeatureToPlanPersistence>();
+            serviceCollection.AddScoped<IAddSubscriberPersistence, AddSubscriberPersistence>();
             return serviceCollection;
         }
     }

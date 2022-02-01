@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Subscriptions.Application.Commands.AddPlan;
-using Subscriptions.Application.Commands.CreatePlan;
 using Subscriptions.Application.Commands.UpdatePlan;
 
 namespace Subscriptions.Api.Controllers

@@ -12,16 +12,12 @@ namespace Subscriptions.Application.Commands.UpdatePlan
     public class UpdatePlanCommandHandler : IRequestHandler<UpdatePlanCommand>
     {
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly IAppsRepository _appsRepository;
-        private readonly IPlansRepository _plansRepository;
         private readonly IMapper _mapper;
 
-        public UpdatePlanCommandHandler(IUnitOfWorkContext unitOfWorkContext,IAppsRepository appsRepository,IPlansRepository plansRepository
+        public UpdatePlanCommandHandler(IUnitOfWorkContext unitOfWorkContext
         ,IMapper mapper)
         {
             _unitOfWorkContext = unitOfWorkContext;
-            _appsRepository = appsRepository;
-            _plansRepository = plansRepository;
             _mapper = mapper;
         }
 
@@ -36,27 +32,27 @@ namespace Subscriptions.Application.Commands.UpdatePlan
             await unitOfWork.BeginWork();
             try
             {
-                if (!await _appsRepository.Exist(request.AppId.Value))
-                {
-                    throw new NotFoundException("");
-                }
-
-                var plan = await _plansRepository.GetPlanByName(request.AppId.Value,request.Name);
-                if (plan is null)
-                {
-                    throw new NotFoundException("");
-                }
-                if (request.NewName != null && plan.Name != request.NewName)
-                {
-                    if (await _plansRepository.Exist(request.AppId.Value,request.NewName))
-                    {
-                        throw new InvalidOperationException("");
-                    }
-
-                    plan.Name = request.NewName;
-                }
-                plan.Description = request.Description;
-                await _plansRepository.UpdatePlan(request.AppId.Value, request.Name, plan);
+                // if (!await _appsRepository.Exist(request.AppId.Value))
+                // {
+                //     throw new NotFoundException("");
+                // }
+                //
+                // var plan = await _plansRepository.GetPlanByName(request.AppId.Value,request.Name);
+                // if (plan is null)
+                // {
+                //     throw new NotFoundException("");
+                // }
+                // if (request.NewName != null && plan.Name != request.NewName)
+                // {
+                //     if (await _plansRepository.Exist(request.AppId.Value,request.NewName))
+                //     {
+                //         throw new InvalidOperationException("");
+                //     }
+                //
+                //     plan.Name = request.NewName;
+                // }
+                // plan.Description = request.Description;
+                // await _plansRepository.UpdatePlan(request.AppId.Value, request.Name, plan);
                 await unitOfWork.CommitWork();
                 return Unit.Value;
             }

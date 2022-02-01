@@ -15,19 +15,13 @@ namespace Subscriptions.Application.Commands.AddStripePaymentMethod
     {
         private readonly IPaymentMethodsService _paymentMethodsService;
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly IPaymentMethodsRepository _paymentMethodsRepository;
-        private readonly ISubscribersRepository _subscribersRepository;
 
         public AddStripePaymentMethodCommandHandler(IPaymentMethodsService paymentMethodsService
             ,IUnitOfWorkContext unitOfWorkContext
-            ,IPaymentMethodsRepository paymentMethodsRepository,
-            ISubscribersRepository subscribersRepository
             )
         {
             _paymentMethodsService = paymentMethodsService;
             _unitOfWorkContext = unitOfWorkContext;
-            _paymentMethodsRepository = paymentMethodsRepository;
-            _subscribersRepository = subscribersRepository;
         }
 
         public async Task<AddStripePaymentMethodCommandResponse> Handle(AddStripePaymentMethodCommand request, CancellationToken cancellationToken)
@@ -40,20 +34,20 @@ namespace Subscriptions.Application.Commands.AddStripePaymentMethod
                     await unitOfWork.BeginWork();
                     try
                     {
-                        var subscriber = await _subscribersRepository.GetSubscriber(request.SubscriberId);
-                        if (subscriber is null)
-                        {
-                            throw new NotFoundException("");
-                        }
-                        var stripePaymentMethod =
-                            new StripePaymentMethod(Guid.NewGuid().ToString(), subscriber, request.PaymentMethodId);
-                        await _paymentMethodsRepository.StorePaymentMethod(stripePaymentMethod);
-                        if (subscriber.DefaultPaymentMethod is null)
-                        {
-                            subscriber.DefaultPaymentMethod = stripePaymentMethod;
-                        }
-                        
-                        await _subscribersRepository.SetDefaultPaymentMethod(subscriber);
+                        // var subscriber = await _subscribersRepository.GetSubscriber(request.SubscriberId);
+                        // if (subscriber is null)
+                        // {
+                        //     throw new NotFoundException("");
+                        // }
+                        // var stripePaymentMethod =
+                        //     new StripePaymentMethod(Guid.NewGuid().ToString(), subscriber, request.PaymentMethodId);
+                        // await _paymentMethodsRepository.StorePaymentMethod(stripePaymentMethod);
+                        // if (subscriber.DefaultPaymentMethod is null)
+                        // {
+                        //     subscriber.DefaultPaymentMethod = stripePaymentMethod;
+                        // }
+                        //
+                        // await _subscribersRepository.SetDefaultPaymentMethod(subscriber);
                         await unitOfWork.CommitWork();
                         return new AddStripePaymentMethodCommandResponse();
                     }

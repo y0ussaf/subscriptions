@@ -28,23 +28,15 @@ namespace Subscriptions.Application.Commands.AddPlan
 
         public async Task<CreatePlanCommandResponse> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
         {
-            if (!request.AppId.HasValue)
-            {
-                throw new InvalidOperationException();
-            }
-
             await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
             try
             {
-                if (!await _persistence.AppExist(request.AppId.Value))
-                {
-                    throw new NotFoundException("");
-                }
+
 
                 var plan = new Plan();
                 _mapper.Map(request, plan);
-                await _persistence.AddPlan(request.AppId.Value,plan);
+                await _persistence.AddPlan(plan);
                 await unitOfWork.CommitWork();
                 return new CreatePlanCommandResponse();
             }

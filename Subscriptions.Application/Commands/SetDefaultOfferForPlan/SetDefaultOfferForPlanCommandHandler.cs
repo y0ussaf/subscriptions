@@ -10,17 +10,10 @@ namespace Subscriptions.Application.Commands.SetDefaultOfferForPlan
     public class SetDefaultOfferForPlanCommandHandler : IRequestHandler<SetDefaultOfferForPlanCommand>
     {
         private readonly IUnitOfWorkContext _unitOfWorkContext;
-        private readonly IPlansRepository _plansRepository;
-        private readonly IOffersRepository _offersRepository;
 
-        public SetDefaultOfferForPlanCommandHandler(IUnitOfWorkContext unitOfWorkContext,
-            IPlansRepository plansRepository,
-            IOffersRepository offersRepository
-            )
+        public SetDefaultOfferForPlanCommandHandler(IUnitOfWorkContext unitOfWorkContext)
         {
             _unitOfWorkContext = unitOfWorkContext;
-            _plansRepository = plansRepository;
-            _offersRepository = offersRepository;
         }
 
         public async Task<Unit> Handle(SetDefaultOfferForPlanCommand request, CancellationToken cancellationToken)
@@ -34,11 +27,11 @@ namespace Subscriptions.Application.Commands.SetDefaultOfferForPlan
                 await unitOfWork.BeginWork();
                 try
                 {
-                    if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
-                    {
-                        throw new NotFoundException("");
-                    }
-                    await _plansRepository.SetDefaultOffer(request.AppId.Value,request.PlanName,request.OfferName);
+                    // if (await _plansRepository.Exist(request.AppId.Value,request.PlanName))
+                    // {
+                    //     throw new NotFoundException("");
+                    // }
+                    // await _plansRepository.SetDefaultOffer(request.AppId.Value,request.PlanName,request.OfferName);
                     await unitOfWork.CommitWork();
                     return Unit.Value;
                 }

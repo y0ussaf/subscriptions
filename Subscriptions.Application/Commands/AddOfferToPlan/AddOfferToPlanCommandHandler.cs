@@ -26,23 +26,19 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
 
         public async Task<AddOfferToPlanCommandResponse> Handle(AddOfferToPlanCommand request, CancellationToken cancellationToken)
         {
-            if (!request.AppId.HasValue)
-            {
-                throw new Exception();
-            }
 
             await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
             try
             {
 
-                if (await _addOfferToPlanCommandPersistence.OfferExist(request.AppId.Value,request.PlanName,request.Name))
+                if (await _addOfferToPlanCommandPersistence.OfferExist(request.PlanName,request.Name))
                 {
                     throw new InvalidOperationException();
                 }
                 var offer = new Offer();
                 _mapper.Map(request,offer);
-                await _addOfferToPlanCommandPersistence.AddOffer(request.AppId.Value,request.PlanName,offer);
+                await _addOfferToPlanCommandPersistence.AddOffer(request.PlanName,offer);
                 await unitOfWork.CommitWork();
                 return new AddOfferToPlanCommandResponse();
             }
