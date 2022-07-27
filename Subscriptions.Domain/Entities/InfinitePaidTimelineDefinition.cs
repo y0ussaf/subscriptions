@@ -13,10 +13,9 @@ namespace Subscriptions.Domain.Entities
 
         public override IEnumerable<TimeLine> Build(DateTime now)
         {
-            var invoice = new Invoice(Guid.NewGuid().ToString(), InvoiceStatus.WaitingToBePaid, AutoCharging);
             return new List<TimeLine>()
             {
-                new InfinitePaidTimeLine(now,invoice)
+                new InfinitePaidTimeLine(now,Amount,false,AutoCharging)
             };
         }
     }

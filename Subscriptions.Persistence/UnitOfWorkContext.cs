@@ -24,7 +24,7 @@ namespace Subscriptions.Persistence
             {
                 await _sqlConnection.OpenAsync();
             }
-            if (_unitOfWork!= null && !_unitOfWork.IsDisposed)
+            if (_unitOfWork is { IsDisposed: false })
             {
                 throw new Exception("the current unit of work should be disposed before creating new one");
             }

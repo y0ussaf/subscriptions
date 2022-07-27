@@ -10,7 +10,7 @@ namespace Subscriptions.Domain.Entities
         {
             DateTimeRange = dateTimeRange;
         }
-
+        public TimeLineDefinition TimeLineDefinition { get; set; }
         public abstract bool IsValid(DateTime date);
         public DateTimeRange DateTimeRange { get; set; }
         public TimelineType TimelineType { get; set; }

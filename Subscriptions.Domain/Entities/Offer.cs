@@ -18,6 +18,8 @@ namespace Subscriptions.Domain.Entities
         public string Name { get; set; }
         public Plan Plan { get; set; }
         public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
+        public long Id { get; set; }
+        public string Description { get; set; }
 
         public void AddTimelineDefinition(TimeLineDefinition definition)
         {

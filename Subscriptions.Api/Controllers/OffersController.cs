@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subscriptions.Application.Commands.AddOfferToPlan;
+using Subscriptions.Application.Queries.Offers.GetOffer;
 
 namespace Subscriptions.Api.Controllers
 {
+    [ApiController]
+    [Route("/plans/{planId:required:long}/offers")]
     public class OffersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -15,10 +20,20 @@ namespace Subscriptions.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddOffer(AddOfferToPlanCommand cmd)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddOffer(AddOfferToPlanCommand cmd)
         {
             var res = await _mediator.Send(cmd);
-            return Ok();
+            return CreatedAtAction(nameof(GetOffer),new {res.Id});
         }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOffer(GetOfferQuery query)
+        {
+            var res = await _mediator.Send(query);
+        }
+    
     }
 }

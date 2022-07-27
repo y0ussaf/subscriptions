@@ -25,7 +25,7 @@ namespace Subscriptions.Persistence.Commands.TransformInfiniteTimelineIntoFinite
 
         public async Task SetTimeLineEnd(string id,DateTime now)
         {
-            var sql = "update timeline set range = tstzrange(lower(range),@now) where id = @id";
+            var sql = "update timeline set during = tstzrange(lower(during),@now) where id = @id";
             var con = _unitOfWorkContext.GetSqlConnection();
             await con.ExecuteAsync(sql, new {now, id}, _unitOfWorkContext.GetTransaction());
         }

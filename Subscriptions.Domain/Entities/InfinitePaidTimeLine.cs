@@ -5,9 +5,12 @@ namespace Subscriptions.Domain.Entities
 {
     public class InfinitePaidTimeLine : PaidTimeLine,IInfiniteTimeLine
     {
-        public InfinitePaidTimeLine(DateTime start, Invoice invoice) : base(new DateTimeRange(start,null),invoice)
+        public InfinitePaidTimeLine(DateTime start,decimal amount,bool paid = false,bool autoCharging = false) : base(new DateTimeRange(start,null),amount, paid, autoCharging)
         {
             TimelineType = TimelineType.InfinitePaidTimeline;
+            Amount = amount;
+            Paid = paid;
+            AutoCharging = autoCharging;
         }
 
 

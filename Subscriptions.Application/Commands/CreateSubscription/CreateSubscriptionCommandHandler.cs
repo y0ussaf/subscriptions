@@ -39,7 +39,7 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                 {
                     throw new NotFoundException("");
                 }
-                var offer = await _persistence.GetOffer(request.PlanName, request.OfferName);
+                var offer = await _persistence.GetOffer(request.OfferId);
                 if (offer is null)
                 {
                     throw new NotFoundException("");
@@ -57,13 +57,12 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                 {
                     timelines.AddRange(timeLineDefinition.Build(nextTimelineStart));
                     var lastTimeline = timelines.Last();
-                    if (lastTimeline.DateTimeRange.End is not null)
-                    {
+                    if (lastTimeline.DateTimeRange.End is not null){
                         nextTimelineStart = lastTimeline.DateTimeRange.End.Value;
                     }
                 }
                 subscription.AddTimeLines(timelines);
-                await _persistence.AddSubscription(request.PlanName,request.OfferName,subscription);
+                await _persistence.AddSubscription(subscription);
                 await unitOfWork.CommitWork();
                 var subscriptionDto = new SubscriptionDto();
                 _mapper.Map(subscription, subscriptionDto);

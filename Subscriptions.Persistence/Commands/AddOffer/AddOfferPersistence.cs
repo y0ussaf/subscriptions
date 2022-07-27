@@ -16,53 +16,46 @@ namespace Subscriptions.Persistence.Commands.AddOffer
             _unitOfWorkContext = unitOfWorkContext;
         }
 
-        public async Task<bool> OfferExist(string planName, string offerName)
+        public async Task<bool> OfferExist(long offerId)
         {
-            var sql = "select 1 from offer where plan_name = @planName and name = @offerName";
+            var sql = "select 1 from offer where id = @offerId";
             var con = _unitOfWorkContext.GetSqlConnection();
-            await using var reader = await con.ExecuteReaderAsync(sql,
-                new { PlanName = planName, OfferName = offerName}, _unitOfWorkContext.GetTransaction());
+            await using var reader = await con.ExecuteReaderAsync(sql, new { offerId}, _unitOfWorkContext.GetTransaction());
             return reader.HasRows;
         }
 
-        public async Task AddOffer(string planName, Offer offer)
+        public async Task<long> AddOffer(long planId, Offer offer)
         {
             var con = _unitOfWorkContext.GetSqlConnection();
             var batch = new NpgsqlBatch(con);
-            batch.BatchCommands.Add(new NpgsqlBatchCommand(
-                "insert into offer (plan_name, name, description) values (@planName,@name,@description);"));
+            var insertOfferCmd = new NpgsqlBatchCommand(
+                "insert into offer (plan_id,name, description) values (@planId,@name,@description);");
+            insertOfferCmd.Parameters.AddRange(new object []
+            {
+                ("PlanId",planId),
+                ("name",offer.Name),
+                ("description",@offer.Description)
+            });
+            batch.BatchCommands.Add(insertOfferCmd);
             foreach (var timeLineDefinition in offer.TimeLineDefinitions)
             {
-                var batchCmd = new NpgsqlBatchCommand();
-                switch (timeLineDefinition)
+                var batchCmd = new NpgsqlBatchCommand
                 {
-                    case OneOrManyFinitePaidTimeLineDefinition oneOrManyExpiredPaidTimeLineDefinition:
-                        batchCmd.CommandText = @"insert into timeline_definition (id,repeat, plan_name,
-                                            offer_name,""order"",amount,minutes,hours,days,months,years,discriminator)
-                                            values (@id,@repeat,@planName,@offerName,@order,@minutes,@hours,
-                                            @days,@months,@years,@amount,@discriminator)";
-                        batchCmd.Parameters.AddRange(
-                            new object[]
-                            {
-                                ("repeat", oneOrManyExpiredPaidTimeLineDefinition.Repeat)
-                            }
-                        );
-                        break;
-                    case InfinitePaidTimelineDefinition:
-                        batchCmd.CommandText = @"insert into timeline_definition (id,app_id, plan_name, offer_name,""order""
-                                            , amount,discriminator) values (@id,@appId,@planName,@offerName,@order,@amount,@discriminator)";
-                        break;
-                    case FiniteFreeTimeLineDefinition:
-                        batchCmd.CommandText = @"insert into timeline_definition (id,plan_name, offer_name,""order""
-                                            ,minutes,hours,days,months,years,discriminator) 
-                                            values (@id,@planName,@offerName,@order,@minutes,@hours,@days,@months
-                                            ,@years,@discriminator)";
-                        break;
-                    case InfiniteFreeTimeLineDefinition:
-                        batchCmd.CommandText = @"insert into timeline_definition (id,plan_name, offer_name,""order"",discriminator) 
-                                            values (@id,@planName,@offerName,@order,@discriminator)";
-                        break;
-                }
+                    CommandText = @"insert into timeline_definition (name, offer_id,repeat, time_span,
+                                            auto_charging,amount,""order"",discriminator)
+                                            values (@name, currval(offer_id_seq), @repeat, @time_span, @auto_charging
+                                            , @amount, @order, @discriminator)"
+                };
+                
+                batchCmd.Parameters.AddRange(new NpgsqlParameter []
+                {
+                    new ("name",timeLineDefinition.Name),
+                    new ("plan_name",timeLineDefinition.Offer.Plan.Name),
+                    new ("offer_name",offer.Name),
+                    new ("order",timeLineDefinition.Order),
+                    new ("discriminator",timeLineDefinition.TimeLineDefinitionType)
+                });
+
 
                 if (timeLineDefinition is PaidTimeLineDefinition paidTimeLineDefinition)
                 {
@@ -78,26 +71,19 @@ namespace Subscriptions.Persistence.Commands.AddOffer
                 {
                     batchCmd.Parameters.AddRange(new NpgsqlParameter []
                     {
-                        new ("minutes", finiteTimeLineDefinition.Expiration.Minutes),
-                        new ("hours", finiteTimeLineDefinition.Expiration.Hours),
-                        new ("days", finiteTimeLineDefinition.Expiration.Days),
-                        new ("months", finiteTimeLineDefinition.Expiration.Months),
-                        new ("years", finiteTimeLineDefinition.Expiration.Years)
+                        new ("time_span",finiteTimeLineDefinition.Expiration.Period)
                     });
                 }
-                batchCmd.Parameters.AddRange(new NpgsqlParameter []
-                {
-                    new ("id",timeLineDefinition.Id),
-                    new ("planName",planName),
-                    new ("offerName",offer.Name),
-                    new ("order",timeLineDefinition.Order),
-                    new ("discriminator",(int) timeLineDefinition.TimeLineDefinitionType),
-                });
+
                 
             }
-
-            await batch.ExecuteNonQueryAsync();
-
+            batch.BatchCommands.Add(new NpgsqlBatchCommand()
+            {
+                CommandText = "select currval(offer_id_seq)"
+            });
+            var offerId = await batch.ExecuteScalarAsync();
+            
+            return (long) offerId!;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan.Persistence
 {
     public interface IAddOfferToPlanCommandPersistence
     {
-        Task<bool> OfferExist(string planName,string offerName);
-        Task AddOffer(string planName,Offer offer);
+        Task<bool> OfferExist(long offerId);
+        Task<long> AddOffer(long planId, Offer offer);
     }
 }

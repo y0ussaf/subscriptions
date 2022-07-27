@@ -5,16 +5,17 @@ using Subscriptions.Domain.Common;
 
 namespace Subscriptions.Domain.Entities
 {
-    public class OneOrManyFinitePaidTimeLineDefinition : PaidTimeLineDefinition,IFiniteTimeLineDefinition
+    public class FinitePaidTimeLineDefinition : PaidTimeLineDefinition,IFiniteTimeLineDefinition
     {
-        public OneOrManyFinitePaidTimeLineDefinition(int repeat,TimelineExpiration expiration)
+        public int Repeat { get; set; }
+
+        public FinitePaidTimeLineDefinition(int repeat,TimelineExpiration expiration)
         {
             Repeat = repeat;
             Expiration = expiration;
-            TimeLineDefinitionType = TimelineDefinitionType.OneOrManyFinitePaidTimeLineDefinition;
+            TimeLineDefinitionType = TimelineDefinitionType.FinitePaidTimeLineDefinition;
         }
 
-        public int Repeat { get; set; }
 
         public TimelineExpiration Expiration { get; set; }
         public override IEnumerable<FinitePaidTimeLine> Build(DateTime now)
@@ -24,8 +25,7 @@ namespace Subscriptions.Domain.Entities
             var timelines = new List<FinitePaidTimeLine>();
             for (var i = 0; i < Repeat; i++)
             {
-                var invoice = new Invoice(Guid.NewGuid().ToString(), InvoiceStatus.WaitingToBePaid,AutoCharging);
-                var timeline = new FinitePaidTimeLine(Expiration.CreateDateTimeRangeFromExpiration(nextTimelineStart),invoice);
+                var timeline = new FinitePaidTimeLine(Expiration.CreateDateTimeRangeFromExpiration(nextTimelineStart),Amount,false,AutoCharging);
                 timelines.Add(timeline);
                 Debug.Assert(timeline.DateTimeRange.End != null, "timeline.DateTimeRange.End != null");
                 nextTimelineStart = (DateTime) timeline.DateTimeRange.End;

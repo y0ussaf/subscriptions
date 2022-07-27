@@ -22,17 +22,16 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             _mapper = mapper;
         }
 
-        public async Task<Offer> GetOffer(string planName, string offerName)
+        public async Task<Offer> GetOffer(long id)
         {
             var sql = @"select o.name,o.description,t.*
                         from offer as o inner join timeline_definition as t on
-                        o.app_id = t.app_id and o.plan_name = t.plan_name and o.name = t.offer_name
-                        where o.app_id = @appId and o.name = @planName and o.name = @offerName";
+                        o.id = t.offer_id
+                        where o.id = @id";
             var con = _unitOfWorkContext.GetSqlConnection();
             var rows = (await con.QueryAsync<GetOfferContract>(sql, new
             {
-                planName,
-                offerName
+                id
             })).ToList();
             if (rows.Any())
             {
@@ -49,12 +48,11 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
                         case TimelineDefinitionType.FiniteFreeTimeLineDefinition :
                             offer.AddTimelineDefinition(_mapper.Map<FiniteFreeTimeLineDefinition>(row));
                             break;
-                        case TimelineDefinitionType.OneOrManyFinitePaidTimeLineDefinition:
-                            offer.AddTimelineDefinition(_mapper.Map<OneOrManyFinitePaidTimeLineDefinition>(row));
-                            break;
-                        case TimelineDefinitionType.MonthlyFinitePaidTimeLineDefinition:
+                        case TimelineDefinitionType.FinitePaidTimeLineDefinition:
+                            offer.AddTimelineDefinition(_mapper.Map<FinitePaidTimeLineDefinition>(row));
                             break;
                         case TimelineDefinitionType.InfiniteFreeTimeLineDefinition:
+                            offer.AddTimelineDefinition(_mapper.Map<InfiniteFreeTimeLineDefinition>(row));
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -67,49 +65,54 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             return null;
         }
 
-        public async Task AddSubscription(string planName, string offerName, Subscription subscription)
+        public async Task AddSubscription(Subscription subscription)
         {
             var con = _unitOfWorkContext.GetSqlConnection();
-            var insertSubSql = @"insert into subscription (id,subscriber_id, plan_name, offer_name) 
-                                values (@id,@subscriberId,@planName,@offerName)";
-            await con.ExecuteAsync(insertSubSql, new
-            {
-                subscription.Id,
-                planName,
-                offerName,
-                subscriberId = subscription.Subscriber.Id
-            });
-
             var batch = new NpgsqlBatch(con);
+            var insertSubCmd = new NpgsqlBatchCommand()
+            {
+                CommandText = @"insert into subscription (subscriber_id, offer_id,status) 
+                                values (@subscriberId,@offerId,@status)"
+            };
+             insertSubCmd.Parameters.AddRange(new object []
+             {
+                 ("subscriber_id",subscription.Subscriber.Id),
+                 ("plan_name",subscription.Offer.Plan.Name),
+                 ("offerId",subscription.Offer.Id),
+             });
 
             foreach (var timeLine in subscription.TimeLines)
             {
-                var insertTimelineCmd = new NpgsqlBatchCommand();
-
-                insertTimelineCmd.CommandText = @"insert into timeline (id, range, subscription_id,
-                  amount, auto_charging, discriminator) values (@id,'[@start,@end]',@subscriptionId,@amount
-                  ,@autoCharging,@discriminator)";
-
-                insertTimelineCmd.Parameters.AddWithValue("end",
-                    (timeLine is IInfiniteTimeLine
-                        ? "infinity"
-                        : timeLine.DateTimeRange.End?.ToString("h:mm:ss tt zz")!) ?? string.Empty);
-
-                if (timeLine is PaidTimeLine paidTimeLine)
+                var insertTimelineCmd = new NpgsqlBatchCommand
                 {
-                    insertTimelineCmd.Parameters.AddWithValue(new NpgsqlParameter[]
+                    CommandText = @"insert into timeline (during,timeline_definition_id
+                        , subscription_id,paid,amount, discriminator) 
+                        values ('[@start,@end]', @timeline_definition_id ,currval(subscription_id_seq)
+                        , @paid, @amount, @discriminator)"
+                };
+                insertTimelineCmd.Parameters.AddRange(new object []
                     {
-                        new ("amount",paidTimeLine.Amount),
-                        new ("autoCharging",paidTimeLine.AutoCharging),
+                        ("timeline_definition_id",timeLine.TimeLineDefinition.Id), 
+                        ("offer_name",timeLine.TimeLineDefinition.Offer.Name),
+                        ("plan_name",timeLine.TimeLineDefinition.Offer.Plan.Name),
+                        ("start",timeLine.DateTimeRange.Start.ToString("h:mm:ss tt zz")),
+                        ("end",(timeLine is IInfiniteTimeLine
+                            ? "infinity"
+                            : timeLine.DateTimeRange.End?.ToString("h:mm:ss tt zz")!) ?? string.Empty),
                     });
-                }
-                    
-                insertTimelineCmd.Parameters.AddWithValue(new NpgsqlParameter[]
+                
+                if (timeLine is PaidTimeLine paidTimeLine )
                 {
-                    new ("start",timeLine.DateTimeRange.Start.ToString("h:mm:ss tt zz")),
-                    new ("subscription_id",subscription.Id),
-                    new ("discriminator",timeLine),
-                });
+                    
+                   insertTimelineCmd.Parameters.AddRange(new object[]
+                   {
+                       ("paid",paidTimeLine.Paid),
+                       ("amount",paidTimeLine.Amount)
+                   });
+                    
+                }
+                batch.BatchCommands.Add(insertTimelineCmd);     
+
             }
 
             await batch.ExecuteNonQueryAsync();

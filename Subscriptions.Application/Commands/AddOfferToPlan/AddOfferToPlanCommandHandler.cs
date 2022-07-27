@@ -32,13 +32,13 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
             try
             {
 
-                if (await _addOfferToPlanCommandPersistence.OfferExist(request.PlanName,request.Name))
+                if (await _addOfferToPlanCommandPersistence.OfferExist(request.PlanId))
                 {
                     throw new InvalidOperationException();
                 }
                 var offer = new Offer();
                 _mapper.Map(request,offer);
-                await _addOfferToPlanCommandPersistence.AddOffer(request.PlanName,offer);
+                await _addOfferToPlanCommandPersistence.AddOffer(request.PlanId,offer);
                 await unitOfWork.CommitWork();
                 return new AddOfferToPlanCommandResponse();
             }

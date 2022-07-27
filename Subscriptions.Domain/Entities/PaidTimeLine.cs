@@ -5,17 +5,21 @@ namespace Subscriptions.Domain.Entities
 {
     public abstract class PaidTimeLine : TimeLine
     {
-        public Invoice Invoice { get; set; }
+        public bool Paid { get; set; }
         public decimal Amount { get; set; }
         public bool AutoCharging { get; set; }
-        public PaidTimeLine(DateTimeRange dateTimeRange,Invoice invoice) : base(dateTimeRange)
+
+
+        protected PaidTimeLine(DateTimeRange dateTimeRange, decimal amount, bool paid, bool autoCharging) : base(dateTimeRange)
         {
-            Invoice = invoice;
+            Amount = amount;
+            Paid = paid;
+            AutoCharging = autoCharging;
         }
 
         public override bool IsValid(DateTime date)
         {
-            return DateTimeRange.Contains(date) && Invoice.Status == InvoiceStatus.Paid;
+            return DateTimeRange.Contains(date) && Paid;
         }
     }
 }
