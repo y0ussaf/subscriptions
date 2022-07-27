@@ -1,1 +1,1 @@
-# subscriptions management software
+# subscriptions management api
