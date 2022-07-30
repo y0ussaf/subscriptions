@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using Subscriptions.Application.Commands.AddPlan;
 
-namespace Subscriptions.Application.Commands.AddPlan
+namespace Subscriptions.Application.Commands.CreatePlan
 {
     public class CreatePlanCommand : IRequest<CreatePlanCommandResponse>
     {

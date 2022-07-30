@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Subscriptions.Application.Commands.CreatePlan;
 
 namespace Subscriptions.Application.Commands.AddPlan
 {

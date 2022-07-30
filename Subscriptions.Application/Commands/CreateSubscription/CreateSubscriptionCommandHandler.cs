@@ -8,6 +8,7 @@ using MediatR;
 using Subscriptions.Application.Commands.CreateSubscription.Persistence;
 using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
+using Subscriptions.Application.Common.Persistence;
 using Subscriptions.Domain.Entities;
 using Subscription = Subscriptions.Domain.Entities.Subscription;
 
@@ -18,16 +19,18 @@ namespace Subscriptions.Application.Commands.CreateSubscription
         private readonly IUnitOfWorkContext _unitOfWorkContext;
         private readonly IMapper _mapper;
         private readonly ICreateSubscriptionCommandPersistence _persistence;
+        private readonly ISubscribersPersistence _subscribersPersistence;
 
         public CreateSubscriptionCommandHandler(
             IUnitOfWorkContext unitOfWorkContext,
             IMapper mapper,
-            ICreateSubscriptionCommandPersistence persistence
+            ICreateSubscriptionCommandPersistence createSubscriptionCommandPersistence,ISubscribersPersistence subscribersPersistence
         )
         {
             _unitOfWorkContext = unitOfWorkContext;
             _mapper = mapper;
-            _persistence = persistence;
+            _persistence = createSubscriptionCommandPersistence;
+            _subscribersPersistence = subscribersPersistence;
         }
         public async Task<CreateSubscriptionCommandResponse> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
         {
@@ -35,7 +38,7 @@ namespace Subscriptions.Application.Commands.CreateSubscription
             await unitOfWork.BeginWork();
             try
             {
-                if (await _persistence.SubscriberExist(request.SubscriberId))
+                if (await _subscribersPersistence.SubscriberExist(request.SubscriberId))
                 {
                     throw new NotFoundException("");
                 }
@@ -62,13 +65,11 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                     }
                 }
                 subscription.AddTimeLines(timelines);
-                await _persistence.AddSubscription(subscription);
+                var id = await _persistence.AddSubscription(subscription);
                 await unitOfWork.CommitWork();
-                var subscriptionDto = new SubscriptionDto();
-                _mapper.Map(subscription, subscriptionDto);
                 return new CreateSubscriptionCommandResponse()
                 {
-                    Subscription = subscriptionDto
+                     Id = id
                 };
             }
             catch (Exception)

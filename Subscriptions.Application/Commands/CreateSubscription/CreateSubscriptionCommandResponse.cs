@@ -2,6 +2,6 @@
 {
     public class CreateSubscriptionCommandResponse
     {
-        public SubscriptionDto Subscription { get; set; }
+        public long Id { get; set; }
     }
 }

@@ -16,13 +16,7 @@ namespace Subscriptions.Persistence.Commands.AddOffer
             _unitOfWorkContext = unitOfWorkContext;
         }
 
-        public async Task<bool> OfferExist(long offerId)
-        {
-            var sql = "select 1 from offer where id = @offerId";
-            var con = _unitOfWorkContext.GetSqlConnection();
-            await using var reader = await con.ExecuteReaderAsync(sql, new { offerId}, _unitOfWorkContext.GetTransaction());
-            return reader.HasRows;
-        }
+
 
         public async Task<long> AddOffer(long planId, Offer offer)
         {

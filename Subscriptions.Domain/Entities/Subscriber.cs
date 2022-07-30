@@ -6,10 +6,11 @@ namespace Subscriptions.Domain.Entities
     {
        
         public string Id { get; set; }
-        public string Name { get; set; }
-        public App App { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        
         public List<PaymentMethod> PaymentMethods { get; set; }
         public PaymentMethod DefaultPaymentMethod { get; set; }
-       
+        public string Email { get; set; }
     }
 }

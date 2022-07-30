@@ -1,8 +1,11 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subscriptions.Application.Commands.AddPlan;
+using Subscriptions.Application.Commands.CreatePlan;
 using Subscriptions.Application.Commands.UpdatePlan;
+using Subscriptions.Application.Queries.Plans.GetPlans;
 
 namespace Subscriptions.Api.Controllers
 {
@@ -17,11 +20,18 @@ namespace Subscriptions.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPlan(GetPlanQuery query)
+        {
+            var res = await _mediator.Send(query);
+            return Ok(res);
+        }
         [HttpPost]
-        public async Task<ActionResult<CreatePlanCommandResponse>> CreatePlan(CreatePlanCommand cmd)
+        public async Task<IActionResult> CreatePlan(CreatePlanCommand cmd)
         {
             var res = await _mediator.Send(cmd);
-            return Ok(res);
+            return CreatedAtAction(nameof(GetPlan),new {id = res.Id });
         }
 
         [HttpPut]

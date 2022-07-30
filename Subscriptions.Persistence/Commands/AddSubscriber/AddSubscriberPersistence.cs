@@ -15,11 +15,11 @@ namespace Subscriptions.Persistence.Commands.AddSubscriber
             _unitOfWorkContext = unitOfWorkContext;
         }
 
-        public async Task AddSubscriber(string appId, Subscriber subscriber)
+        public async Task AddSubscriber(Subscriber subscriber)
         {
             var con = _unitOfWorkContext.GetSqlConnection();
-            var sql = @"insert into subscriber (id, app_id, name, email) 
-                        values (@id,@appId,@name,@email)";
+            var sql = @"insert into subscriber (id, first_name, last_name, email) 
+                        values (@id,@first_name,@last_name,@email)";
             await con.ExecuteAsync(sql);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
 using Subscriptions.Application.Common.Interfaces;
+using Subscriptions.Application.Queries.Offers.GetOffer;
 using Subscriptions.Application.Queries.Offers.GetOffer.Persistence;
 using Subscriptions.Domain.Entities;
 
@@ -15,11 +16,11 @@ namespace Subscriptions.Persistence.Queries.Offers.GetOffer
             _unitOfWorkContext = unitOfWorkContext;
         }
 
-        public async Task<Offer> GetOffer(long id)
+        public async Task<OfferDto> GetOffer(long id)
         {
             var sql = @"select * from offer where id = @id";
             var con = _unitOfWorkContext.GetSqlConnection();
-            return await con.QueryFirstOrDefaultAsync<Offer>(sql, new
+            return await con.QueryFirstOrDefaultAsync<OfferDto>(sql, new
             {
                 id
             });

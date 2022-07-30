@@ -5,6 +5,7 @@ using AutoMapper;
 using MediatR;
 using Subscriptions.Application.Commands.AddOfferToPlan.Persistence;
 using Subscriptions.Application.Common.Interfaces;
+using Subscriptions.Application.Common.Persistence;
 using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Application.Commands.AddOfferToPlan
@@ -14,14 +15,16 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
         private readonly IMapper _mapper;
         private readonly IUnitOfWorkContext _unitOfWorkContext;
         private readonly IAddOfferToPlanCommandPersistence _addOfferToPlanCommandPersistence;
+        private readonly IPlansPersistence _plansPersistence;
 
         public AddOfferToPlanCommandHandler(IMapper mapper
             , IUnitOfWorkContext unitOfWorkContext
-            ,IAddOfferToPlanCommandPersistence addOfferToPlanCommandPersistence)
+            ,IAddOfferToPlanCommandPersistence addOfferToPlanCommandPersistence,IPlansPersistence plansPersistence)
         {
             _mapper = mapper;
             _unitOfWorkContext = unitOfWorkContext;
             _addOfferToPlanCommandPersistence = addOfferToPlanCommandPersistence;
+            _plansPersistence = plansPersistence;
         }
 
         public async Task<AddOfferToPlanCommandResponse> Handle(AddOfferToPlanCommand request, CancellationToken cancellationToken)
@@ -32,7 +35,7 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
             try
             {
 
-                if (await _addOfferToPlanCommandPersistence.OfferExist(request.PlanId))
+                if (await _plansPersistence.PlanExist(request.PlanId))
                 {
                     throw new InvalidOperationException();
                 }

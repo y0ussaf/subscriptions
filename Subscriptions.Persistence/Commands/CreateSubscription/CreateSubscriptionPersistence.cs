@@ -65,7 +65,7 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             return null;
         }
 
-        public async Task AddSubscription(Subscription subscription)
+        public async Task<long> AddSubscription(Subscription subscription)
         {
             var con = _unitOfWorkContext.GetSqlConnection();
             var batch = new NpgsqlBatch(con);
@@ -111,16 +111,17 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
                    });
                     
                 }
+                batch.BatchCommands.Add(new NpgsqlBatchCommand()
+                {
+                    CommandText = "select currval(subscription_id_seq)"
+                });
                 batch.BatchCommands.Add(insertTimelineCmd);     
 
             }
 
-            await batch.ExecuteNonQueryAsync();
+            return (long) (await batch.ExecuteScalarAsync())!;
         }
 
-        public Task<bool> SubscriberExist(string subscriberId)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

@@ -33,7 +33,14 @@ namespace Subscriptions.Api.Controllers
         public async Task<IActionResult> GetOffer(GetOfferQuery query)
         {
             var res = await _mediator.Send(query);
+            return Ok(res);
         }
-    
+        [HttpGet("{id}/definitions")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOfferTimelinesDefinitions(GetOfferQuery query)
+        {
+            var res = await _mediator.Send(query);
+            return Ok(res);
+        }
     }
 }

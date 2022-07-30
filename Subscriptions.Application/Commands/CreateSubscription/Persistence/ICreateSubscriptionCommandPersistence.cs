@@ -6,7 +6,6 @@ namespace Subscriptions.Application.Commands.CreateSubscription.Persistence
     public interface ICreateSubscriptionCommandPersistence
     {
         Task<Offer> GetOffer(long id);
-        Task AddSubscription(Subscription subscription);
-        Task<bool> SubscriberExist(string subscriberId);
+        Task<long> AddSubscription(Subscription subscription);
     }
 }

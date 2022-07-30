@@ -5,6 +5,6 @@ namespace Subscriptions.Application.Queries.Offers.GetOffer.Persistence
 {
     public interface IGetOfferQueryPersistence
     {
-        public Task<Offer> GetOffer(long id);
+        public Task<OfferDto> GetOffer(long id);
     }
 }

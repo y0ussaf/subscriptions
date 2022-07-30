@@ -2,6 +2,6 @@
 {
     public class GetOfferQueryResponse
     {
-        
+        public OfferDto Offer { get; set; }
     }
 }

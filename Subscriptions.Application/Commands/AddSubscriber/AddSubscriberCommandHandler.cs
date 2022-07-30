@@ -28,9 +28,11 @@ namespace Subscriptions.Application.Commands.AddSubscriber
                 var subscriber = new Subscriber()
                 {
                     Id = request.Id,
-                    Name = request.Name
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email
                 };
-                await _persistence.AddSubscriber(request.Name, subscriber);
+                await _persistence.AddSubscriber(subscriber);
             }
             catch (Exception)
             {

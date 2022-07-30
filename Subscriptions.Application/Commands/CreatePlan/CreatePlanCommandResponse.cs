@@ -2,5 +2,6 @@
 {
     public class CreatePlanCommandResponse
     {
+        public long Id { get; set; }
     }
 }

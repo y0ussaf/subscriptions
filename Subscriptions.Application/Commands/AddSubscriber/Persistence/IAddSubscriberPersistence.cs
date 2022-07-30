@@ -5,6 +5,6 @@ namespace Subscriptions.Application.Commands.AddSubscriber.Persistence
 {
     public interface IAddSubscriberPersistence
     {
-        Task AddSubscriber(string appId, Subscriber subscriber);
+        Task AddSubscriber(Subscriber subscriber);
     }
 }

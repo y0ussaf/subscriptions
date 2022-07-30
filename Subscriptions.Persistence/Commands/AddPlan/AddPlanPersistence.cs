@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
-using Subscriptions.Application.Commands.AddPlan.Persistence;
+using Subscriptions.Application.Commands.CreatePlan.Persistence;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Domain.Entities;
 

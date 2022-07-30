@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Subscriptions.Domain.Entities;
 
-namespace Subscriptions.Application.Commands.AddPlan.Persistence
+namespace Subscriptions.Application.Commands.CreatePlan.Persistence
 {
     public interface IAddPlanCommandPersistence
     {
