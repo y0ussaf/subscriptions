@@ -22,16 +22,22 @@ namespace Subscriptions.Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetPlan(GetPlanQuery query)
+        public async Task<IActionResult> GetPlan(long id)
         {
+            var query = new GetPlanQuery()
+            {
+                PlanId = id
+            };
             var res = await _mediator.Send(query);
             return Ok(res);
         }
         [HttpPost]
-        public async Task<IActionResult> CreatePlan(CreatePlanCommand cmd)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+
+        public async Task<CreatedAtActionResult> CreatePlan(CreatePlanCommand cmd)
         {
             var res = await _mediator.Send(cmd);
-            return CreatedAtAction(nameof(GetPlan),new {id = res.Id });
+            return CreatedAtAction(nameof(GetPlan),new {id = res.Id},null);
         }
 
         [HttpPut]

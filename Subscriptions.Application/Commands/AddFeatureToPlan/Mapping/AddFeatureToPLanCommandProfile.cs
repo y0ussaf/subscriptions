@@ -7,7 +7,7 @@ namespace Subscriptions.Application.Commands.AddFeatureToPlan.Mapping
     {
         public AddFeatureToPLanCommandProfile()
         {
-            CreateMap<AddFeatureToPlanCommand, Feature>();
+            CreateMap<AddFeatureToPlanCommand, PlanFeature>();
         }
     }
 }

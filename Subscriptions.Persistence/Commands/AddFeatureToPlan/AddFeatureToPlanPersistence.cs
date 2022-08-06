@@ -16,18 +16,16 @@ namespace Subscriptions.Persistence.Commands.AddFeatureToPlan
             _unitOfWorkContext = unitOfWorkContext;
         }
 
-        public async Task AddFeatureToPlan(string planName, Feature feature)
+        public async Task AddFeatureToPlan(PlanFeature planFeature)
         {
-            var sql = @"insert into feature (plan_name, description) values (@planName, @description)";
-            await using var cmd = new NpgsqlCommand(sql)
+            var con = _unitOfWorkContext.GetSqlConnection();
+            var sql = @"insert into plan_feature (plan_id, feature_id, details) values (@planId, @featureId, @details)";
+            await con.ExecuteAsync(sql, new
             {
-                Parameters =
-                {
-                    new ("planName",planName),
-                    new ("description",feature.Description)
-                }
-            };
-            await cmd.ExecuteNonQueryAsync();
+                PlanId = planFeature.Plan.Id,
+                FeatureId = planFeature.Feature.Id,
+                planFeature.Details
+            });
         }
 
         public async Task<bool> PlanExist(string planName)

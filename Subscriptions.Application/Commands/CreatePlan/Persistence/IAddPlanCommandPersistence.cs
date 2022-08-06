@@ -5,6 +5,6 @@ namespace Subscriptions.Application.Commands.CreatePlan.Persistence
 {
     public interface IAddPlanCommandPersistence
     {
-        Task AddPlan(Plan plan);
+        Task<long> AddPlan(Plan plan);
     }
 }

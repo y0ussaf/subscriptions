@@ -37,9 +37,12 @@ namespace Subscriptions.Application.Commands.AddPlan
 
                 var plan = new Plan();
                 _mapper.Map(request, plan);
-                await _persistence.AddPlan(plan);
+                var id = await _persistence.AddPlan(plan);
                 await unitOfWork.CommitWork();
-                return new CreatePlanCommandResponse();
+                return new CreatePlanCommandResponse()
+                {
+                    Id = id
+                };
             }
             catch (Exception)
             {

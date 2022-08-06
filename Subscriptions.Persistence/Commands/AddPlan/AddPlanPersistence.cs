@@ -16,11 +16,11 @@ namespace Subscriptions.Persistence.Commands.AddPlan
         }
 
 
-        public async Task AddPlan(Plan plan)
+        public async Task<long> AddPlan(Plan plan)
         {
-            var sql = "insert into plan (name,description) values (@name,@description)";
+            var sql = "insert into plan (name,description) values (@name,@description) returning id";
             var con = _unitOfWorkContext.GetSqlConnection();
-            await con.ExecuteAsync(sql, new
+            return (long) await con.ExecuteScalarAsync(sql, new
             {
                 plan.Description,
                 plan.Name

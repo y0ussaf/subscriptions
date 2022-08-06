@@ -2,6 +2,6 @@
 {
     public class GetPlansQueryResponse 
     {
-        
+        public PlanDto Plan { get; set; }
     }
 }

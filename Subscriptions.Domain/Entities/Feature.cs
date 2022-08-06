@@ -2,8 +2,8 @@
 {
     public class Feature
     {
-        public string Description { get; set; }
-        public Plan Plan { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
     }
 
 }

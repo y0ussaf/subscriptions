@@ -10,8 +10,7 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
     {
         public AddPlanToOfferCommandValidator()
         {
-            RuleFor(x => x.Expiration)
-                .SetValidator(new ExpirationValidator());
+                
           
         }
     }

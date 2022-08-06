@@ -9,7 +9,8 @@ using Subscriptions.Application.Queries.Offers.GetOffer;
 namespace Subscriptions.Api.Controllers
 {
     [ApiController]
-    [Route("/plans/{planId:required:long}/offers")]
+
+    [Route("api/v1/plans/{planId:required:long}/[controller]")]
     public class OffersController : ControllerBase
     {
         private readonly IMediator _mediator;

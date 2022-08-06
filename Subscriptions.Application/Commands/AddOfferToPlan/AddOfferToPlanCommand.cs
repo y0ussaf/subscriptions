@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
 using Subscriptions.Domain.Common;
-using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Application.Commands.AddOfferToPlan
 {
@@ -9,12 +8,13 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
     {
         public AddOfferToPlanCommand()
         {
-            TimeLineDefinitions = new List<TimeLineDefinition>();
+            TimeLineDefinitions = new List<TimelineDefinitionDto>();
         }
 
         public string Name { get; set; }
         public long PlanId { get; set; }
-        public TimelineExpiration Expiration { get; set; }
-        public IEnumerable<TimeLineDefinition> TimeLineDefinitions { get; set; }
+        public IEnumerable<TimelineDefinitionDto> TimeLineDefinitions { get; set; }
+        
+        
     }
 }

@@ -7,7 +7,7 @@ using Subscriptions.Application.Commands.CreateSubscription;
 namespace Subscriptions.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class SubscriptionsController : ControllerBase
     {
         private readonly IMediator _mediator;

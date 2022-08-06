@@ -5,7 +5,7 @@ namespace Subscriptions.Application.Commands.AddFeatureToPlan.Persistence
 {
     public interface IAddFeatureToPlanCommandPersistence
     {
-        public Task AddFeatureToPlan(string planName, Feature feature);
+        public Task AddFeatureToPlan(PlanFeature planFeature);
         Task<bool> PlanExist(string planName);
     }
 }

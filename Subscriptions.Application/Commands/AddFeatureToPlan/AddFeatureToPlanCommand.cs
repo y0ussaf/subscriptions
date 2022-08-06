@@ -2,9 +2,10 @@
 
 namespace Subscriptions.Application.Commands.AddFeatureToPlan
 {
-    public class AddFeatureToPlanCommand : IRequest<AddFeatureToPlanResponse>
+    public class AddFeatureToPlanCommand : IRequest<Unit>
     {
-        public string Description { get; set; }
-        public string PlanName { get; set; }
+        public long FeatureId { get; set; }
+        public string Details { get; set; }
+        public long PlanId { get; set; }
     }
 }
