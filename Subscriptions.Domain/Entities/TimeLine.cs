@@ -1,5 +1,6 @@
 ﻿using System;
 using Subscriptions.Domain.Common;
+using Subscriptions.Domain.Entities.Conditions;
 
 namespace Subscriptions.Domain.Entities
 {
@@ -14,6 +15,7 @@ namespace Subscriptions.Domain.Entities
         public abstract bool IsValid(DateTime date);
         public DateTimeRange DateTimeRange { get; set; }
         public TimelineType TimelineType { get; set; }
+        public LogicalExpressionsGroup ConditionsGroup { get; set; }
     }
 
     public enum TimelineType

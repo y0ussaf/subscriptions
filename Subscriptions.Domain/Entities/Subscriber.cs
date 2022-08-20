@@ -12,5 +12,9 @@ namespace Subscriptions.Domain.Entities
         public List<PaymentMethod> PaymentMethods { get; set; }
         public PaymentMethod DefaultPaymentMethod { get; set; }
         public string Email { get; set; }
+        
+        
+        // stats
+        public int NumberOfSubscriptions { get; set; }
     }
 }
