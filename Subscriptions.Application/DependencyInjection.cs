@@ -13,6 +13,7 @@ namespace Subscriptions.Application
             serviceCollection.AddAutoMapper(Assembly.GetExecutingAssembly());
             serviceCollection.AddMediatR(Assembly.GetExecutingAssembly());
             serviceCollection.AddSingleton<IAppSecretGenerator, AppSecretGenerator>();
+            
         }
     }
 }

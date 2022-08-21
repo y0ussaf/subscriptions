@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Subscriptions.Domain.Entities
 {
@@ -16,5 +17,6 @@ namespace Subscriptions.Domain.Entities
         
         // stats
         public int NumberOfSubscriptions { get; set; }
+        public DateTime JoinDate { get; set; }
     }
 }
