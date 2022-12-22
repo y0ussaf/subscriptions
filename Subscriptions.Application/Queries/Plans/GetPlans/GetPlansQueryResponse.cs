@@ -1,7 +1,12 @@
-﻿namespace Subscriptions.Application.Queries.Plans.GetPlans
+﻿using System.Collections.Generic;
+
+namespace Subscriptions.Application.Queries.Plans.GetPlans
 {
-    public class GetPlansQueryResponse 
+    public class GetPlansQueryResponse
     {
-        public PlanDto Plan { get; set; }
+        
+        
+        public IEnumerable<PlanDto> Plans { get; set; }
+        public long Count { get; set; }
     }
 }

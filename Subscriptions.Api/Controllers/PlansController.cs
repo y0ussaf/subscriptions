@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Subscriptions.Application.Commands.AddPlan;
 using Subscriptions.Application.Commands.CreatePlan;
 using Subscriptions.Application.Commands.UpdatePlan;
+using Subscriptions.Application.Queries.Plans.GetPlan;
 using Subscriptions.Application.Queries.Plans.GetPlans;
 
 namespace Subscriptions.Api.Controllers
@@ -44,6 +45,13 @@ namespace Subscriptions.Api.Controllers
         public async Task<IActionResult> UpdatePlan(UpdatePlanCommand cmd)
         {
             var res = await _mediator.Send(cmd);
+            return Ok(res);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetPlans([FromQuery] GetPlansQuery query)
+        {
+            var res = await _mediator.Send(query);
             return Ok(res);
         }
     }

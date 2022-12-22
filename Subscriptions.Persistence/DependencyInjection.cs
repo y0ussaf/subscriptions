@@ -15,7 +15,9 @@ using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Application.Common.Persistence;
 using Subscriptions.Application.Queries.Offers.GetOffer.Persistence;
 using Subscriptions.Application.Queries.Offers.GetTimelinesDefinitions.Persistence;
+using Subscriptions.Application.Queries.Plans.GetPlan;
 using Subscriptions.Application.Queries.Plans.GetPlans;
+using Subscriptions.Application.Queries.Plans.GetPlans.Persistence;
 using Subscriptions.Persistence.Commands.AddFeatureToPlan;
 using Subscriptions.Persistence.Commands.AddOffer;
 using Subscriptions.Persistence.Commands.AddPlan;
@@ -29,6 +31,7 @@ using Subscriptions.Persistence.Common;
 using Subscriptions.Persistence.Queries.Offers.GetOffer;
 using Subscriptions.Persistence.Queries.Offers.GetTimelinesDefinitions;
 using Subscriptions.Persistence.Queries.Plans.GetPlan;
+using Subscriptions.Persistence.Queries.Plans.GetPlans;
 
 namespace Subscriptions.Persistence
 {
@@ -57,8 +60,9 @@ namespace Subscriptions.Persistence
             serviceCollection.AddScoped<ITransformInfiniteTimelineIntoFinitePersistence, TransformInfiniteTimelineIntoFinitePersistence>();
             serviceCollection.AddScoped<ISetDefaultPlanCommandPersistence, SetDefaultPlanCommandPersistence>();
             serviceCollection.AddScoped<IPauseSubscriptionCommandPersistence, PauseSubscriptionCommandPersistence>();
-            serviceCollection.AddScoped<IGetPlanPersistence, GetPlanPersistence>();
+            serviceCollection.AddScoped<IGetPlanPersistence, GetPlanQueryPersistence>();
             serviceCollection.AddScoped<ICreateFeaturePersistence, CreateFeaturePersistence>();
+            serviceCollection.AddScoped<IGetPlansQueryPersistence, GetPlansQueryPersistence>();
             return serviceCollection;
         }
     }

@@ -3,15 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Subscriptions.Application.Common.Interfaces;
+using Subscriptions.Application.Queries.Plans.GetPlan;
 using Subscriptions.Application.Queries.Plans.GetPlans;
+using PlanDto = Subscriptions.Application.Queries.Plans.GetPlan.PlanDto;
 
 namespace Subscriptions.Persistence.Queries.Plans.GetPlan
 {
-    public class GetPlanPersistence : IGetPlanPersistence
+    public class GetPlanQueryPersistence : IGetPlanPersistence
     {
         private readonly IUnitOfWorkContext _unitOfWorkContext;
 
-        public GetPlanPersistence(IUnitOfWorkContext unitOfWorkContext)
+        public GetPlanQueryPersistence(IUnitOfWorkContext unitOfWorkContext)
         {
             _unitOfWorkContext = unitOfWorkContext;
         }

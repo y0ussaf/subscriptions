@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Subscriptions.Application.Queries.Plans.GetPlans
+namespace Subscriptions.Application.Queries.Plans.GetPlan
 {
     public interface IGetPlanPersistence
     {

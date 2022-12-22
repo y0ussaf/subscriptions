@@ -1,39 +1,34 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Subscriptions.Application.Common.Interfaces;
+using Subscriptions.Application.Queries.Plans.GetPlans.Persistence;
 
 namespace Subscriptions.Application.Queries.Plans.GetPlans
-{ 
-    public class GetPlansQueryHandler : IRequestHandler<GetPlanQuery,GetPlansQueryResponse>
+{
+    public class GetPlansQueryHandler  : IRequestHandler<GetPlansQuery,GetPlansQueryResponse>
     {
-        private readonly IGetPlanPersistence _getPlanPersistence;
         private readonly IUnitOfWorkContext _unitOfWorkContext;
+        private readonly IGetPlansQueryPersistence _getPlansQueryPersistence;
 
-        public GetPlansQueryHandler(IGetPlanPersistence getPlanPersistence,IUnitOfWorkContext unitOfWorkContext)
+        public GetPlansQueryHandler(IUnitOfWorkContext unitOfWorkContext,IGetPlansQueryPersistence getPlansQueryPersistence)
         {
-            _getPlanPersistence = getPlanPersistence;
             _unitOfWorkContext = unitOfWorkContext;
+            _getPlansQueryPersistence = getPlansQueryPersistence;
         }
 
-        public async Task<GetPlansQueryResponse> Handle(GetPlanQuery request, CancellationToken cancellationToken)
+        public async Task<GetPlansQueryResponse> Handle(GetPlansQuery query, CancellationToken cancellationToken)
         {
-            var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
+            await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
-            try
+            var (plans,count) = await _getPlansQueryPersistence.GetPlansWithCount(query);
+
+            return new GetPlansQueryResponse()
             {
-                var plan = await _getPlanPersistence.GetPlan(request.PlanId);
-                return new GetPlansQueryResponse()
-                {
-                    Plan = plan
-                };
-            }
-            catch (Exception)
-            {
-                await unitOfWork.RollBack();
-                throw;
-            }
+                Count = count,
+                Plans = plans
+            };
+
         }
     }
 }

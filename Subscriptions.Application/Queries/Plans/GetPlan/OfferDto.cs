@@ -1,4 +1,4 @@
-﻿namespace Subscriptions.Application.Queries.Plans.GetPlans
+﻿namespace Subscriptions.Application.Queries.Plans.GetPlan
 {
     public class OfferDto
     {
