@@ -35,7 +35,15 @@ namespace Subscriptions.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Subscriptions.Api", Version = "v1"});
             });
-            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("cors",
+                    policy  =>
+                    {
+                        policy.AllowAnyOrigin()
+                            .AllowAnyMethod();
+                    });
+            });
             services.AddPersistence(Configuration);
             services.AddInfrastructure(Configuration);
             services.AddApplication();
@@ -53,9 +61,8 @@ namespace Subscriptions.Api
 
             app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseCors("cors");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
