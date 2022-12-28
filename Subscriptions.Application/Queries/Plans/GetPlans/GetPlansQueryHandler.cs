@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Subscriptions.Application.Common.Interfaces;
 using Subscriptions.Application.Queries.Plans.GetPlans.Persistence;
+using Subscriptions.Domain.Entities;
 
 namespace Subscriptions.Application.Queries.Plans.GetPlans
 {
@@ -21,6 +22,7 @@ namespace Subscriptions.Application.Queries.Plans.GetPlans
         {
             await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
+            query.OrderBy ??= nameof(Plan.CreatedAt);
             var (plans,count) = await _getPlansQueryPersistence.GetPlansWithCount(query);
 
             return new GetPlansQueryResponse()
