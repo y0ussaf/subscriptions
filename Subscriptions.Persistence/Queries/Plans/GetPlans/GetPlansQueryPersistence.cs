@@ -20,15 +20,14 @@ namespace Subscriptions.Persistence.Queries.Plans.GetPlans
         {
             var con = _unitOfWorkContext.GetSqlConnection();
             var orderBy = new SnakeCaseNamingStrategy().GetPropertyName(query.OrderBy, false);
-            var sql = $@"select p.*, coalesce(t.total_subscriptions,0) from plan p left join 
+            var sql = $@"select p.*, coalesce(t.total_subscriptions,0) total_subscriptions from plan p left join 
                         (
                             select count(*) as total_subscriptions, o.plan_id 
                             from subscription s inner join offer o on s.offer_id = o.id
                             group by o.plan_id
                         ) t
                         on p.id = t.plan_id
-                        order by {orderBy} " + (query.Asc ? "asc" : "desc") + 
-                        @" limit @limit offset @offset;
+                        order by {orderBy} {(query.Asc ? "asc" : "desc")}  limit @limit offset @offset; 
                         select count(*) from plan;";
             var grid =  await con.QueryMultipleAsync(sql, new
             {

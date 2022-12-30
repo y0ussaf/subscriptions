@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Subscriptions.Domain.Entities
@@ -20,11 +21,18 @@ namespace Subscriptions.Domain.Entities
         public ICollection<TimeLineDefinition> TimeLineDefinitions { get; set; }
         public long Id { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public void AddTimelineDefinition(TimeLineDefinition definition)
         {
             TimeLineDefinitions.Add(definition);
         }
+    }
+
+    enum OfferStatus
+    {
+        Active,
+        Inactive,
     }
    
     

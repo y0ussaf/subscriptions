@@ -64,6 +64,7 @@ namespace Subscriptions.Api
             app.UseRouting();
             app.UseCors("cors");
             app.UseAuthorization();
+;
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

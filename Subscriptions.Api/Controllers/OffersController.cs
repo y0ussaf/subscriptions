@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Subscriptions.Application.Commands.AddOfferToPlan;
 using Subscriptions.Application.Queries.Offers.GetOffer;
+using Subscriptions.Application.Queries.Offers.GetOffers;
 
 namespace Subscriptions.Api.Controllers
 {
@@ -20,6 +21,14 @@ namespace Subscriptions.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetOffers(int planId,[FromQuery] GetOffersQuery query)
+        {
+            query.PlanId = planId;
+            var res = await _mediator.Send(query);
+            return Ok(res);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -33,6 +42,7 @@ namespace Subscriptions.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOffer(GetOfferQuery query)
         {
+                
             var res = await _mediator.Send(query);
             return Ok(res);
         }

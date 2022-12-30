@@ -22,6 +22,7 @@ namespace Subscriptions.Domain.Entities
     public enum PlanStatus
     {
         Active,
-        Inactive
+        Inactive,
+        Archived
     }
 }
