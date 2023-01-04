@@ -9,10 +9,7 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription.Mapping
         public GetOfferContractProfiles()
         {
             CreateMap<GetOfferContract, Offer>();
-            CreateMap<GetOfferContract, FinitePaidTimeLineDefinition>();
-            CreateMap<GetOfferContract, FiniteFreeTimeLineDefinition>();
-            CreateMap<GetOfferContract, InfiniteFreeTimeLineDefinition>();
-            CreateMap<GetOfferContract, InfinitePaidTimelineDefinition>();
+            CreateMap<GetOfferContract, Interval>();
         }
     }
 }

@@ -40,23 +40,7 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
                 _mapper.Map(firstRow, offer);
                 foreach (var row in rows)
                 {
-                    switch (row.Discriminator)
-                    {
-                        case TimelineDefinitionType.InfinitePaidTimelineDefinition :
-                            offer.AddTimelineDefinition(_mapper.Map<InfinitePaidTimelineDefinition>(row));
-                            break;
-                        case TimelineDefinitionType.FiniteFreeTimeLineDefinition :
-                            offer.AddTimelineDefinition(_mapper.Map<FiniteFreeTimeLineDefinition>(row));
-                            break;
-                        case TimelineDefinitionType.FinitePaidTimeLineDefinition:
-                            offer.AddTimelineDefinition(_mapper.Map<FinitePaidTimeLineDefinition>(row));
-                            break;
-                        case TimelineDefinitionType.InfiniteFreeTimeLineDefinition:
-                            offer.AddTimelineDefinition(_mapper.Map<InfiniteFreeTimeLineDefinition>(row));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    offer.AddIntervalDefinition(_mapper.Map<IntervalDefinition>(row));
                 }
 
                 return offer;
@@ -71,51 +55,41 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription
             var batch = new NpgsqlBatch(con);
             var insertSubCmd = new NpgsqlBatchCommand()
             {
-                CommandText = @"insert into subscription (subscriber_id, offer_id,status) 
-                                values (@subscriberId,@offerId,@status)"
+                CommandText = @"insert into subscription (subscriber_id,status) 
+                                values (@subscriberId,@status)"
             };
              insertSubCmd.Parameters.AddRange(new object []
              {
-                 ("subscriber_id",subscription.Subscriber.Id),
-                 ("plan_name",subscription.Offer.Plan.Name),
-                 ("offerId",subscription.Offer.Id),
+                 ("subscriberId",subscription.Subscriber.Id),
+                 ("status",subscription.Status.ToString())
              });
 
-            foreach (var timeLine in subscription.TimeLines)
+            foreach (var interval in subscription.Intervals)
             {
-                var insertTimelineCmd = new NpgsqlBatchCommand
+                var insertIntervalCmd = new NpgsqlBatchCommand
                 {
                     CommandText = @"insert into timeline (during,timeline_definition_id
-                        , subscription_id,paid,amount, discriminator) 
+                        , subscription_id,price) 
                         values ('[@start,@end]', @timeline_definition_id ,currval(subscription_id_seq)
-                        , @paid, @amount, @discriminator)"
+                        , @price)"
                 };
-                insertTimelineCmd.Parameters.AddRange(new object []
+
+                var intervalEnd = interval.DateTimeRange.End;
+                insertIntervalCmd.Parameters.AddRange(new object []
                     {
-                        ("timeline_definition_id",timeLine.TimeLineDefinition.Id), 
-                        ("offer_name",timeLine.TimeLineDefinition.Offer.Name),
-                        ("plan_name",timeLine.TimeLineDefinition.Offer.Plan.Name),
-                        ("start",timeLine.DateTimeRange.Start.ToString("h:mm:ss tt zz")),
-                        ("end",(timeLine is IInfiniteTimeLine
+                        ("timeline_definition_id",interval.IntervalDefinition.Id), 
+                        ("start",interval.DateTimeRange.Start.ToString("h:mm:ss tt zz")),
+                        ("end",( intervalEnd == null
                             ? "infinity"
-                            : timeLine.DateTimeRange.End?.ToString("h:mm:ss tt zz")!) ?? string.Empty),
+                            : interval.DateTimeRange.End?.ToString("h:mm:ss tt zz")!) ?? string.Empty),
+                        ("price",interval.IntervalDefinition.Price)
                     });
                 
-                if (timeLine is PaidTimeLine paidTimeLine )
-                {
-                    
-                   insertTimelineCmd.Parameters.AddRange(new object[]
-                   {
-                       ("paid",paidTimeLine.Paid),
-                       ("amount",paidTimeLine.Amount)
-                   });
-                    
-                }
                 batch.BatchCommands.Add(new NpgsqlBatchCommand()
                 {
                     CommandText = "select currval(subscription_id_seq)"
                 });
-                batch.BatchCommands.Add(insertTimelineCmd);     
+                batch.BatchCommands.Add(insertIntervalCmd);     
 
             }
 

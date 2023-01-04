@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentValidation;
-using Subscriptions.Application.Common.Validators;
 using Subscriptions.Domain.Common;
 using Subscriptions.Domain.Entities;
 

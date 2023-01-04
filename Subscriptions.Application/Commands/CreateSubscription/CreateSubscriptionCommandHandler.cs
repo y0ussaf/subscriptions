@@ -54,17 +54,17 @@ namespace Subscriptions.Application.Commands.CreateSubscription
                 {
                     Id = Guid.NewGuid().ToString()
                 };
-                var timelines = new List<TimeLine>();
-                var nextTimelineStart = now;
-                foreach (var timeLineDefinition in offer.TimeLineDefinitions)
+                var intervals = new List<Interval>();
+                var nextIntervalStart = now;
+                foreach (var intervalDefinition in offer.IntervalDefinitions)
                 {
-                    timelines.AddRange(timeLineDefinition.Build(nextTimelineStart));
-                    var lastTimeline = timelines.Last();
+                    intervals.AddRange(intervalDefinition.Build(nextIntervalStart));
+                    var lastTimeline = intervals.Last();
                     if (lastTimeline.DateTimeRange.End is not null){
-                        nextTimelineStart = lastTimeline.DateTimeRange.End.Value;
+                        nextIntervalStart = lastTimeline.DateTimeRange.End.Value;
                     }
                 }
-                subscription.AddTimeLines(timelines);
+                subscription.AddIntervals(intervals);
                 var id = await _persistence.AddSubscription(subscription);
                 await unitOfWork.CommitWork();
                 return new CreateSubscriptionCommandResponse()

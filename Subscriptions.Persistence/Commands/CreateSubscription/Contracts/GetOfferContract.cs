@@ -5,11 +5,11 @@ namespace Subscriptions.Persistence.Commands.CreateSubscription.Contracts
 {
     public class GetOfferContract
     {
-
-        public Period Period { get; set; }
-        public decimal? Amount { get; set; }
-        public bool? AutoCharging { get; set; }
-        public int? Repeat { get; set; }
-        public TimelineDefinitionType Discriminator { get; set; }
+        
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int Count { get; set; }
+        public string Type { get; set; }
     }
 }

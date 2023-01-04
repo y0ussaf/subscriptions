@@ -6,14 +6,17 @@ namespace Subscriptions.Application.Commands.AddOfferToPlan
 {
     public class AddOfferToPlanCommand : IRequest<AddOfferToPlanCommandResponse>
     {
+        public long PlanId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public IEnumerable<IntervalDefinitionDto> IntervalDefinitions { get; set; }
+
         public AddOfferToPlanCommand()
         {
-            TimeLineDefinitions = new List<TimelineDefinitionDto>();
+            IntervalDefinitions = new List<IntervalDefinitionDto>();
         }
 
-        public string Name { get; set; }
-        public long PlanId { get; set; }
-        public IEnumerable<TimelineDefinitionDto> TimeLineDefinitions { get; set; }
+
         
         
     }

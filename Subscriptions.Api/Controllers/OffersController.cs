@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace Subscriptions.Api.Controllers
 {
     [ApiController]
 
-    [Route("api/v1/plans/{planId:required:long}/[controller]")]
+    [Route("api/v1/[controller]")]
     public class OffersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +24,7 @@ namespace Subscriptions.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetOffers(int planId,[FromQuery] GetOffersQuery query)
+        public async Task<IActionResult> GetOffers([Required] int planId,[FromQuery] GetOffersQuery query)
         {
             query.PlanId = planId;
             var res = await _mediator.Send(query);
@@ -42,16 +43,9 @@ namespace Subscriptions.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOffer(GetOfferQuery query)
         {
-                
             var res = await _mediator.Send(query);
             return Ok(res);
         }
-        [HttpGet("{id}/definitions")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetOfferTimelinesDefinitions(GetOfferQuery query)
-        {
-            var res = await _mediator.Send(query);
-            return Ok(res);
-        }
+
     }
 }

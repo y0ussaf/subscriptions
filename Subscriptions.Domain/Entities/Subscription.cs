@@ -14,17 +14,17 @@ namespace Subscriptions.Domain.Entities
         public string Id { get; set; }
 
         public Offer Offer { get; set; }
-        public List<TimeLine> TimeLines { get; set; }
+        public List<Interval> Intervals { get; set; }
         public Subscriber Subscriber { get; set; }
         public SubscriptionStatus Status { get; set; }
 
-        public void AddTimeLines(IEnumerable<TimeLine> timeLines)
+        public void AddIntervals(IEnumerable<Interval> intervals)
         {
-            TimeLines.AddRange(timeLines);
+            Intervals.AddRange(intervals);
         }
-        public TimeLine GetCurrentTimeLine(DateTime date)
+        public Interval GetCurrentTimeLine(DateTime date)
         {
-            return TimeLines.FirstOrDefault(t => t.DateTimeRange.Contains(date));
+            return Intervals.FirstOrDefault(t => t.DateTimeRange.Contains(date));
         }
         public bool IsValid(DateTime date)
         {

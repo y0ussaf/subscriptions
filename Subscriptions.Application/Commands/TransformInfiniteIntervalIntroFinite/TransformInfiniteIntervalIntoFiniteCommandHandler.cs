@@ -2,45 +2,44 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Subscriptions.Application.Commands.TransformInfiniteTimelineIntroFinite.Persistence;
+using Subscriptions.Application.Commands.TransformInfiniteIntervalIntroFinite.Persistence;
 using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
-using Subscriptions.Domain.Entities;
 
-namespace Subscriptions.Application.Commands.TransformInfiniteTimelineIntroFinite
+namespace Subscriptions.Application.Commands.TransformInfiniteIntervalIntroFinite
 {
-    public class TransformInfiniteTimelineIntoFiniteCommandHandler : IRequestHandler<TransformInfiniteTimelineIntoFiniteCommand,TransformInfiniteTimelineIntoFiniteResponse>
+    public class TransformInfiniteIntervalIntoFiniteCommandHandler : IRequestHandler<TransformInfiniteIntervalIntoFiniteCommand,TransformInfiniteIntervalIntoFiniteResponse>
     {
         private readonly IUnitOfWorkContext _unitOfWorkContext;
         private readonly ITransformInfiniteTimelineIntoFinitePersistence _persistence;
 
-        public TransformInfiniteTimelineIntoFiniteCommandHandler(IUnitOfWorkContext unitOfWorkContext,ITransformInfiniteTimelineIntoFinitePersistence persistence)
+        public TransformInfiniteIntervalIntoFiniteCommandHandler(IUnitOfWorkContext unitOfWorkContext,ITransformInfiniteTimelineIntoFinitePersistence persistence)
         {
             _unitOfWorkContext = unitOfWorkContext;
             _persistence = persistence;
         }
 
-        public async Task<TransformInfiniteTimelineIntoFiniteResponse> Handle(TransformInfiniteTimelineIntoFiniteCommand request, CancellationToken cancellationToken)
+        public async Task<TransformInfiniteIntervalIntoFiniteResponse> Handle(TransformInfiniteIntervalIntoFiniteCommand request, CancellationToken cancellationToken)
         {
             // app owner 
             await using var unitOfWork = await _unitOfWorkContext.CreateUnitOfWork();
             await unitOfWork.BeginWork();
             try
             {
-                var timeLine = await _persistence.GetTimeline(request.TimelineId);
+                var timeLine = await _persistence.GetInterval(request.TimelineId);
                 if (timeLine is null)
                 {
                     throw new NotFoundException("");
                 }
                     
-                if (timeLine is not IInfiniteTimeLine)
+                if (timeLine.DateTimeRange.End is not null)
                 {
                     throw new BadRequestException("");
                 }
                 var now = DateTime.Now;
-                await _persistence.SetTimeLineEnd(request.TimelineId, now);
+                await _persistence.SetIntervalEnd(request.TimelineId, now);
                 await unitOfWork.CommitWork();
-                return new TransformInfiniteTimelineIntoFiniteResponse();
+                return new TransformInfiniteIntervalIntoFiniteResponse();
             }
             catch (Exception)
             {

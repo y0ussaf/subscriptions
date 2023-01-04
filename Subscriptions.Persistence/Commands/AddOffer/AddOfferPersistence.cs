@@ -31,7 +31,7 @@ namespace Subscriptions.Persistence.Commands.AddOffer
                 ("description",@offer.Description)
             });
             batch.BatchCommands.Add(insertOfferCmd);
-            foreach (var timeLineDefinition in offer.TimeLineDefinitions)
+            foreach (var intervalDefinition in offer.IntervalDefinitions)
             {
                 var batchCmd = new NpgsqlBatchCommand
                 {
@@ -43,33 +43,15 @@ namespace Subscriptions.Persistence.Commands.AddOffer
                 
                 batchCmd.Parameters.AddRange(new NpgsqlParameter []
                 {
-                    new ("name",timeLineDefinition.Name),
-                    new ("plan_name",timeLineDefinition.Offer.Plan.Name),
+                    new ("name",intervalDefinition.Name),
+                    new ("plan_name",intervalDefinition.Offer.Plan.Name),
                     new ("offer_name",offer.Name),
-                    new ("order",timeLineDefinition.Order),
-                    new ("discriminator",timeLineDefinition.TimeLineDefinitionType)
+                    new ("order",intervalDefinition.Order),
+                    new ("amount",intervalDefinition.Price),
+
                 });
 
 
-                if (timeLineDefinition is PaidTimeLineDefinition paidTimeLineDefinition)
-                {
-                    batchCmd.Parameters.AddRange(new NpgsqlParameter []
-                    {
-                        new ("amount",paidTimeLineDefinition.Amount),
-                        new ("auto_charging",paidTimeLineDefinition.AutoCharging)
-                    });
-                }
-
-
-                if (timeLineDefinition is IFiniteTimeLineDefinition finiteTimeLineDefinition)
-                {
-                    batchCmd.Parameters.AddRange(new NpgsqlParameter []
-                    {
-                        new ("time_span",finiteTimeLineDefinition.Expiration.Period)
-                    });
-                }
-
-                
             }
             batch.BatchCommands.Add(new NpgsqlBatchCommand()
             {

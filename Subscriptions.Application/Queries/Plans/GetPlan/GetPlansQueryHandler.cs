@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Subscriptions.Application.Common.Exceptions;
 using Subscriptions.Application.Common.Interfaces;
 
 namespace Subscriptions.Application.Queries.Plans.GetPlan
@@ -24,6 +25,10 @@ namespace Subscriptions.Application.Queries.Plans.GetPlan
             try
             {
                 var plan = await _getPlanPersistence.GetPlan(request.PlanId);
+                if (plan is null)
+                {
+                    throw new NotFoundException("plan not found");
+                }
                 return new GetPlanQueryResponse()
                 {
                     Plan = plan
